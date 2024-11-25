@@ -60,10 +60,10 @@ function SearchItems($player, $type = "", $definedType = "", $maxCost = -1, $min
   return SearchInner($items, $player, "ITEMS", ItemPieces(), $type, $definedType, $maxCost, $minCost, $aspect, $arena, $hasBountyOnly, $hasUpgradeOnly, $trait, $damagedOnly, $maxAttack, $maxHealth, $frozenOnly, $hasNegCounters, $hasEnergyCounters, $tokenOnly, $minAttack, $keyword);
 }
 
-function SearchAllies($player, $type = "", $definedType = "", $maxCost = -1, $minCost = -1, $aspect = "", $arena = "", $hasBountyOnly = false, $hasUpgradeOnly = false, $trait = -1, $damagedOnly = false, $maxAttack = -1, $maxHealth = -1, $frozenOnly = false, $hasNegCounters = false, $hasEnergyCounters = false, $tokenOnly = false, $minAttack = false, $keyword = false)
+function SearchAllies($player, $type = "", $definedType = "", $maxCost = -1, $minCost = -1, $aspect = "", $arena = "", $enteredThisPhase = false, $hasBountyOnly = false, $hasUpgradeOnly = false, $trait = -1, $damagedOnly = false, $maxAttack = -1, $maxHealth = -1, $frozenOnly = false, $hasNegCounters = false, $hasEnergyCounters = false, $tokenOnly = false, $minAttack = false, $keyword = false)
 {
   $allies = &GetAllies($player);
-  return SearchInner($allies, $player, "ALLY", AllyPieces(), $type, $definedType, $maxCost, $minCost, $aspect, $arena, $hasBountyOnly, $hasUpgradeOnly, $trait, $damagedOnly, $maxAttack, $maxHealth, $frozenOnly, $hasNegCounters, $hasEnergyCounters, $tokenOnly, $minAttack, $keyword);
+  return SearchInner($allies, $player, "ALLY", AllyPieces(), $type, $definedType, $maxCost, $minCost, $aspect, $arena, $enteredThisPhase, $hasBountyOnly, $hasUpgradeOnly, $trait, $damagedOnly, $maxAttack, $maxHealth, $frozenOnly, $hasNegCounters, $hasEnergyCounters, $tokenOnly, $minAttack, $keyword);
 }
 
 function SearchPermanents($player, $type = "", $definedType = "", $maxCost = -1, $minCost = -1, $aspect = "", $arena = "", $hasBountyOnly = false, $hasUpgradeOnly = false, $trait = -1, $damagedOnly = false, $maxAttack = -1, $maxHealth = -1, $frozenOnly = false, $hasNegCounters = false, $hasEnergyCounters = false, $tokenOnly = false, $minAttack = false, $keyword = false)
@@ -85,7 +85,7 @@ function SearchMaterial($player, $type = "", $definedType = "", $maxCost = -1, $
 }
 
 
-function SearchInner(&$array, $player, $zone, $count, $type, $definedType, $maxCost, $minCost, $aspect, $arena, $hasBountyOnly, $hasUpgradeOnly, $trait, $damagedOnly, $maxAttack, $maxHealth, $frozenOnly, $hasNegCounters, $hasEnergyCounters, $tokenOnly, $minAttack, $keyword)
+function SearchInner(&$array, $player, $zone, $count, $type, $definedType, $maxCost, $minCost, $aspect, $arena, $enteredThisPhase, $hasBountyOnly, $hasUpgradeOnly, $trait, $damagedOnly, $maxAttack, $maxHealth, $frozenOnly, $hasNegCounters, $hasEnergyCounters, $tokenOnly, $minAttack, $keyword)
 {
   $cardList = "";
   for ($i = 0; $i < count($array); $i += $count) {
@@ -118,6 +118,10 @@ function SearchInner(&$array, $player, $zone, $count, $type, $definedType, $maxC
             $ally = new Ally("MYALLY-" . $i, $player);
             if($ally->CurrentPower() < $minAttack) continue;
           } elseif(AttackValue($cardID) < $minAttack) continue;
+        }
+        if($enteredThisPhase && $zone == "ALLY") {
+          $ally = new Ally("MYALLY-" . $i, $player);
+          if($ally->TurnsInPlay() > 0) continue;
         }
         if($hasBountyOnly && $zone == "ALLY") {
           $ally = new Ally("MYALLY-" . $i, $player);
@@ -799,6 +803,7 @@ function SearchMultizone($player, $searches)
     $minCost = -1;
     $aspect = "";
     $arena = "";
+    $enteredThisPhase = false;
     $hasBountyOnly = false;
     $hasUpgradeOnly = false;
     $trait = -1;
@@ -844,6 +849,9 @@ function SearchMultizone($player, $searches)
             break;
           case "arena":
             $arena = $condition[1];
+            break;
+          case "enteredThisPhase":
+            $enteredThisPhase = $condition[1];
             break;
           case "hasBountyOnly":
             $hasBountyOnly = $condition[1];
@@ -971,7 +979,7 @@ function SearchMultizone($player, $searches)
           $searchResult = SearchItems($searchPlayer, $type, $definedType, $maxCost, $minCost, $aspect, $arena, $hasBountyOnly, $hasUpgradeOnly, $trait, $damagedOnly, $maxAttack, $maxHealth, $frozenOnly, $hasNegCounters, $hasEnergyCounters, $tokenOnly, $minAttack, $keyword);
           break;
         case "MYALLY": case "THEIRALLY":
-          $searchResult = SearchAllies($searchPlayer, $type, $definedType, $maxCost, $minCost, $aspect, $arena, $hasBountyOnly, $hasUpgradeOnly, $trait, $damagedOnly, $maxAttack, $maxHealth, $frozenOnly, $hasNegCounters, $hasEnergyCounters, $tokenOnly, $minAttack, $keyword);
+          $searchResult = SearchAllies($searchPlayer, $type, $definedType, $maxCost, $minCost, $aspect, $arena, $enteredThisPhase, $hasBountyOnly, $hasUpgradeOnly, $trait, $damagedOnly, $maxAttack, $maxHealth, $frozenOnly, $hasNegCounters, $hasEnergyCounters, $tokenOnly, $minAttack, $keyword);
           break;
         case "MYPERM": case "THEIRPERM":
           $searchResult = SearchPermanents($searchPlayer, $type, $definedType, $maxCost, $minCost, $aspect, $arena, $hasBountyOnly, $hasUpgradeOnly, $trait, $damagedOnly, $maxAttack, $maxHealth, $frozenOnly, $hasNegCounters, $hasEnergyCounters, $tokenOnly, $minAttack, $keyword);
