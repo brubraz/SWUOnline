@@ -1258,9 +1258,10 @@ function AllyPlayedAsUpgradeAbility($cardID, $player, $targetAlly) {
       }
       break;
     case "6720065735"://Han Solo (Has His Moments)
-      AddDecisionQueue("YESNO", $player, "Do you want to attack with " . CardLink($targetAlly->CardID(), $targetAlly->CardID()) . "?");
+      AddDecisionQueue("YESNO", $player, "(han) if you want to attack with " . CardLink($targetAlly->CardID(), $targetAlly->CardID()));
       AddDecisionQueue("NOPASS", $player, "-");
-      AddDecisionQueue("PASSPARAMETER", $player, $targetAlly->MZIndex(), 1);
+      AddDecisionQueue("PASSPARAMETER", $player, $targetAlly->UniqueID(), 1);
+      // AddDecisionQueue("MZOP", $player, "ALLYREADYORPASS", 1);
       AddDecisionQueue("ADDCURRENTEFFECT", $player, "6720065735", 1);
       AddDecisionQueue("MZOP", $player, "ATTACK", 1);
       break;
@@ -1465,8 +1466,9 @@ function AllyHasPlayCardAbility($playedCardID, $playedCardUniqueID, $from, $card
 {
   global $currentPlayer, $CS_NumCardsPlayed;
   $thisAlly = new Ally("MYALLY-" . $index, $player);
-  if($thisAlly->LostAbilities($playedCardID)) return false;
+  if ($thisAlly->LostAbilities($playedCardID)) return false;
   $thisIsNewlyPlayedAlly = $thisAlly->UniqueID() == $playedCardUniqueID;
+  $playedAsUpgrade = DefinedTypesContains($playedCardID, "Upgrade");
 
   // When you play a card
   if ($player == $currentPlayer) {
@@ -1484,6 +1486,9 @@ function AllyHasPlayCardAbility($playedCardID, $playedCardUniqueID, $from, $card
       case "0981852103"://Lady Proxima
         return !$thisIsNewlyPlayedAlly && TraitContains($playedCardID, "Underworld", $player);
       case "4088c46c4d"://The Mandalorian Leader Unit
+      case "6354077246"://Black Squadron Scout Wing
+        $target = TargetAlly();
+        return $target->UniqueID() == $thisAlly->UniqueID() && !$target->IsExhausted() && DefinedTypesContains($playedCardID, "Upgrade") ;
       case "8031540027"://Dengar
         return DefinedTypesContains($playedCardID, "Upgrade");
       case "0961039929"://Colonel Yularen
@@ -1601,11 +1606,10 @@ function AllyPlayCardAbility($player, $cardID, $uniqueID, $numUses, $playedCardI
         break;
       case "8031540027"://Dengar
         if(DefinedTypesContains($playedCardID, "Upgrade", $player)) {
-          global $CS_LayerTarget;
-          $target = GetClassState($player, $CS_LayerTarget);
+          $mzTarget = TargetAlly()->MZIndex();
           AddDecisionQueue("YESNO", $player, "if you want to deal 1 damage from " . CardLink($cardID, $cardID) . "?");
           AddDecisionQueue("NOPASS", $player, "-");
-          AddDecisionQueue("PASSPARAMETER", $player, $target, 1);
+          AddDecisionQueue("PASSPARAMETER", $player, $mzTarget, 1);
           AddDecisionQueue("MZOP", $player, "DEALDAMAGE,1,$player,1", 1);
         }
         break;
@@ -1645,6 +1649,15 @@ function AllyPlayCardAbility($player, $cardID, $uniqueID, $numUses, $playedCardI
           AddDecisionQueue("SETDQCONTEXT", $player, "Choose a unit to exhaust", 1);
           AddDecisionQueue("MAYCHOOSEMULTIZONE", $player, "<-", 1);
           AddDecisionQueue("MZOP", $player, "REST", 1);
+        }
+        break;
+      case "6354077246"://Black Squadron Scout Wing
+        if ($ally->Exists() && !$ally->IsExhausted()) {
+          AddDecisionQueue("YESNO", $player, "if you want to attack with " . CardLink($cardID, $cardID));
+          AddDecisionQueue("NOPASS", $player, "-");
+          AddDecisionQueue("PASSPARAMETER", $player, $ally->UniqueID(), 1);
+          AddDecisionQueue("ADDCURRENTEFFECT", $player, "6354077246,PLAY", 1);
+          AddDecisionQueue("MZOP", $player, "ATTACK", 1);
         }
         break;
       case "3952758746"://Toro Calican

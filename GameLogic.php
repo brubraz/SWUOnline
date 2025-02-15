@@ -479,6 +479,9 @@ function DecisionQueueStaticEffect($phase, $player, $parameter, $lastResult)
         case "SINK": MZSink($player, $lastResult); return $lastResult;
         //case "SUPPRESS": MZSuppress($player, $lastResult); return $lastResult;//FAB
         case "REST": MZRest($player, $lastResult); return $lastResult;
+        case "ALLYREADYORPASS":
+          $ally = new Ally($lastResult, $player);
+          return $ally->Exists() && !$ally->IsExhausted() ? $lastResult : "PASS";
         case "READY": MZWakeUp($player, $lastResult); return $lastResult;
         case "PLAYCARD": return MZPlayCard($player, $lastResult);
         case "ATTACK": return MZAttack($player, $lastResult);

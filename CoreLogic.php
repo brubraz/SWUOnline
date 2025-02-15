@@ -1691,6 +1691,18 @@ function NumEquipBlock()
     return true;
   }
 
+  function TypePlayed() {
+    // get cardid of the last played card
+    
+  }
+
+  function TargetAlly() {
+    global $mainPlayer, $CS_LayerTarget;
+    $target = GetClassState($mainPlayer, $CS_LayerTarget);
+    $ally = new Ally($target, $mainPlayer);
+    return $ally;
+  }
+
   function AttackerAlly() {
     global $mainPlayer;
     $attackerMZ = AttackerMZID($mainPlayer);
@@ -1927,6 +1939,8 @@ function SelfCostModifier($cardID, $from, $reportMode=false)
         default: break;
       }
     }
+
+    // Piloting Cost Modifier
     if($from == "HAND" && PilotingCost($cardID) > -1) {
       switch($cardID) {
         case "6421006753"://The Mandalorian
@@ -1935,6 +1949,7 @@ function SelfCostModifier($cardID, $from, $reportMode=false)
           break;
       }
     }
+
     if($cardAspects != "") {
       $aspectArr = explode(",", $cardAspects);
       for($i=0; $i<count($aspectArr); ++$i)
@@ -1959,6 +1974,7 @@ function SelfCostModifier($cardID, $from, $reportMode=false)
       $modifier += $penalty * 2;
     }
   }
+
   //Self Cost Modifier
   switch($cardID) {
     case "2585318816"://Resolute
@@ -2008,6 +2024,7 @@ function SelfCostModifier($cardID, $from, $reportMode=false)
       break;
     default: break;
   }
+
   //Target cost modifier
   if(count($layers) > 0) {
     $mzIndex = GetClassState($currentPlayer, $CS_LayerTarget);
@@ -2049,6 +2066,7 @@ function SelfCostModifier($cardID, $from, $reportMode=false)
       default: break;
     }
   }
+
   //Opponent ally cost modifier
   $otherPlayer = $currentPlayer == 1 ? 2 : 1;
   $allies = &GetAllies($otherPlayer);
@@ -2083,6 +2101,7 @@ function SelfCostModifier($cardID, $from, $reportMode=false)
       default: break;
     }
   }
+  
   return $modifier;
 }
 
@@ -3365,8 +3384,10 @@ function PlayAbility($cardID, $from, $resourcesPaid, $target = "-", $additionalC
       if($mzArr[0] == "MYALLY") {
         $ally = new Ally($target);
         if(!$ally->IsExhausted()) {
-          AddDecisionQueue("PASSPARAMETER", $currentPlayer, $target);
-          AddDecisionQueue("MZOP", $currentPlayer, "ATTACK");
+          AddDecisionQueue("YESNO", $currentPlayer, "if you want to attack with " . CardLink($ally->CardID(), $ally->CardID()));
+          AddDecisionQueue("NOPASS", $currentPlayer, "-");
+          AddDecisionQueue("PASSPARAMETER", $currentPlayer, $target, 1);
+          AddDecisionQueue("MZOP", $currentPlayer, "ATTACK", 1);
         }
       }
       break;

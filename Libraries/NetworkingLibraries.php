@@ -1774,7 +1774,6 @@ function AddPrePitchDecisionQueue($cardID, $from, $index = -1, $skipAbilityType 
     $pilotCost = PilotingCost($cardID, $currentPlayer);
     if ($pilotCost >= 0) {
       if (!SearchCurrentTurnEffects("0011262813", $currentPlayer)) {//Wedge Antilles Leader
-        AddDecisionQueue("SETDQCONTEXT", $currentPlayer, "Choose if you want to play this unit as a pilot?");
         AddDecisionQueue("YESNO", $currentPlayer, "if you want to play this unit as a pilot");
         AddDecisionQueue("NOPASS", $currentPlayer, "-");
         AddDecisionQueue("PASSPARAMETER", $currentPlayer, 1, 1);
