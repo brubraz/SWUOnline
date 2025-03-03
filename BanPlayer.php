@@ -17,18 +17,16 @@ if ($useruid != "OotTheMonk" && $useruid != "love" && $useruid != "ninin" && $us
 }
 
 $playerToBan = TryGET("playerToBan", "");
+$banReason = TryGET("banReason", "");
+$banDays = TryGET("banDays", 30);
 $ipToBan = TryGET("ipToBan", "");
 $playerNumberToBan = TryGET("playerNumberToBan", "");
 $playerToUnban = TryGET("playerToUnban", "");
 
 if ($playerToBan != "") {
-  file_put_contents('./HostFiles/bannedPlayers.txt', $playerToBan . "\r\n", FILE_APPEND | LOCK_EX);
   BanPlayer($playerToBan);
 }
 if ($playerToUnban != "") {
-  $bannedPlayers = file_get_contents('./HostFiles/bannedPlayers.txt');
-  $bannedPlayers = str_replace($playerToUnban . "\r\n", "", $bannedPlayers);
-  file_put_contents('./HostFiles/bannedPlayers.txt', $bannedPlayers, LOCK_EX);
   UnbanPlayer($playerToUnban);
 }
 if ($ipToBan != "") {

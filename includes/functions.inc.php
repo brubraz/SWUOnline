@@ -301,14 +301,14 @@ function logCompletedGameStats()
 	*/
 }
 
-function changePassword($conn, $userID, $newPwd)
+function changePassword($conn, $userID, $newPwd, $page = "ChangePassword.php")
 {
 	$conn = GetDBConnection();
 	$sql = "UPDATE users SET usersPwd = ? WHERE usersId = ?;";
 
 	$stmt = mysqli_stmt_init($conn);
 	if (!mysqli_stmt_prepare($stmt, $sql)) {
-		header("location: ../ChangePassword.php?error=stmtfailed");
+		header("location: ../" . $page . "?error=stmtfailed");
 		exit();
 	}
 
@@ -318,7 +318,7 @@ function changePassword($conn, $userID, $newPwd)
 	mysqli_stmt_execute($stmt);
 	mysqli_stmt_close($stmt);
 	mysqli_close($conn);
-	header("location: ../ChangePassword.php?error=none");
+	header("location: ../" . $page . "?error=none");
 	exit();
 }
 
@@ -639,4 +639,22 @@ function UnbanPlayer($uid)
 		mysqli_stmt_close($stmt);
 	}
 	mysqli_close($conn);
+}
+
+function ListBannedPlayers()
+{
+	$conn = GetDBConnection();
+	$sql = "SELECT usersUid FROM users WHERE isBanned = true";
+	$stmt = mysqli_stmt_init($conn);
+	$bannedPlayers = array();
+	if (mysqli_stmt_prepare($stmt, $sql)) {
+		mysqli_stmt_execute($stmt);
+		$result = mysqli_stmt_get_result($stmt);
+		while ($row = mysqli_fetch_array($result, MYSQLI_NUM)) {
+			array_push($bannedPlayers, $row[0]);
+		}
+		mysqli_stmt_close($stmt);
+	}
+	mysqli_close($conn);
+	return $bannedPlayers;
 }
