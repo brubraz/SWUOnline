@@ -84,9 +84,11 @@ ul {
 /* Core Styles */
 
 body {
-  background-size: cover;
-  background-position: center;
-  background-image: url('../Images/arena-bg.webp');
+  background-size: no-repeat;
+  background-position: center center;
+  /* background-image: url('../Images/SWUKeyArt/SWH04_Starfield.jpg'); */
+  background-color: #17130b;
+  /* background-blend-mode: hard-light; */
   max-width: 100%;
   height: 100%;
   margin: 0;
@@ -94,7 +96,7 @@ body {
 
 button, input, select, textarea {
   padding: 10px 15px;
-  background: rgba(115, 115, 115, 1);
+  background: #3a342b;
   border: 0;
   border-radius: 5px;
   line-height: 1.125;
@@ -119,7 +121,7 @@ button, .GameLobby_Button, .create-game-button, .ServerChecker_Button, .JoinGame
   cursor: pointer;
   font-weight: 600;
   transition: 150ms ease-in-out;
-  box-shadow: inset 0 0 0 1px rgba(100, 100, 40, 1);
+  /* box-shadow: inset 0 0 0 1px rgba(100, 100, 40, 1); */
 }
 
 button:hover, .GameLobby_Button:hover, .create-game-button:hover, .ServerChecker_Button:hover, .JoinGame_Button:hover, .spectate-button:hover {
@@ -131,7 +133,7 @@ input, select {
 }
 
 select {
-  background: rgba(115, 115, 115, 1) url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg' fill='%23eceff4'%3E%3Cpath d='M5 6l5 5 5-5 2 1-7 7-7-7 2-1z'/%3E%3C/svg%3E") no-repeat right 5px center;
+  background: #3a342b url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg' fill='%23eceff4'%3E%3Cpath d='M5 6l5 5 5-5 2 1-7 7-7-7 2-1z'/%3E%3C/svg%3E") no-repeat right 5px center;
   width: 100%;
   border-radius: 5px;
   appearance: none;
@@ -143,16 +145,16 @@ select {
 
 .container {
   flex: 1;
-  border-radius: 10px;
+  border-radius: 20px;
   padding: 20px;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(20px);
+  /* backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px); */
   scrollbar-color: #888888 rgba(0, 0, 0, 0);
   scrollbar-width: thin;
 }
 
 .bg-yellow {
-  background: rgba(90, 70, 30, 0.7);
+  background: #241f17;
 }
 
 .bg-blue {
@@ -392,12 +394,85 @@ select {
   margin-bottom: 5px;
 }
 
+.create-game-button {
+  /* background: #5d4200 !important;
+  color: #ffdea5 !important; */
+  /* background: #ecc06c !important;
+  color: #412d00 !important; */
+  /* background: #201b13 !important;
+  color: #ecc06c !important; */
+  background: #53452a !important;
+  color: #f6e0bb !important;
+  box-shadow: none !important;
+  font-weight: 500 !important;
+}
+
 /* Create Game */
+/* CREATE GAME TABS ---------------------------------------------------------------------------------------------- */
+/* Tabs specific to the create-game-wrapper */
+.create-game-tabs {
+  display: flex;
+  width: 100%; /* Ensure tabs take up full width */
+  border-bottom: 1px solid transparent; /* Bottom border for the tabs container */
+  margin-bottom: 20px;
+}
+
+/* #f1e7c2 */
+/* #dead5b */
+/* #6c3820 */
+/* #84542d */
+/* #3f231f */
+/* #5a461e */
+
+.create-game-tab {
+  flex: 1; /* Each tab takes up equal space */
+  text-align: center; /* Center the text */
+  padding: 10px 0; /* Padding for better spacing */
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: 600;
+  color: #aaaaaa; /* Inactive tab color */
+  transition: color 0.3s, border-bottom 0.3s;
+  border-bottom: 2px solid transparent; /* Transparent border by default */
+}
+
+.create-game-tab.active {
+  color: white; /* Active tab color */
+  border-bottom: 2px solid #ecc06c; /* Bottom border for the active tab */
+}
+
+.create-game-tab:hover {
+  color: white; /* Hover color */
+}
+
+.create-game-tab-content {
+  display: none; /* Hide all tab content by default */
+}
+
+.create-game-tab-content.active {
+  display: block; /* Show active tab content */
+}
+
+:focus-visible {
+  outline-color: transparent;
+}
+
+/* Dropdown styling */
+/* .create-game-wrapper select {
+  width: 100%;
+  margin: 10px 0 20px 0;
+  background: #394452 url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg' fill='%23eceff4'%3E%3Cpath d='M5 6l5 5 5-5 2 1-7 7-7-7 2-1z'/%3E%3C/svg%3E") no-repeat right 5px center;
+  border-radius: 5px;
+  appearance: none;
+  border: none;
+  padding: 10px 15px;
+  font-size: 16px;
+  color: white;
+} */
 
 .create-game-wrapper {
   margin-left: 20px;
   flex: 1;
-  height:fit-content;
   overflow-y: auto;
   scrollbar-color: #888888 rgba(0, 0, 0, 0);
   scrollbar-width: thin;
@@ -408,6 +483,10 @@ select {
 
 .create-game-wrapper input, .create-game-wrapper select {
   width: 100%;
+}
+
+.create-game.container {
+  height: calc(100% - 40px);
 }
 
 .privacy-input, .inputFavoriteDeck {
@@ -429,6 +508,7 @@ select {
 }
 
 .save-deck {
+  margin-top: 3px;
   margin-bottom: 20px;
   display: block;
 }
