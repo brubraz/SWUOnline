@@ -1067,7 +1067,9 @@ function ResolveSingleTarget($mainPlayer, $defPlayer, $target, $attackerPrefix, 
   LogCombatResolutionStats($totalAttack, 0);
 
   $targetArr = explode("-", $target);
+  $isDefenderAlly = false;
   if ($targetArr[0] == "THEIRALLY") {
+    $isDefenderAlly = true;
     //Construct defender
     $defender = new Ally($target, $defPlayer);
     //Resolve the combat
@@ -1105,7 +1107,7 @@ function ResolveSingleTarget($mainPlayer, $defPlayer, $target, $attackerPrefix, 
   if (!$attackerDestroyed) {
     CompletesAttackEffect($attackerID);
   }
-  if ($attackerID == "1086021299") {
+  if ($attackerID == "1086021299" && $isDefenderAlly) {
     ArquitensAssaultCruiser($mainPlayer, $defenderCardID);
   }
   ProcessDecisionQueue();

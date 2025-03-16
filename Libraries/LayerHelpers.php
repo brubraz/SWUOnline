@@ -140,10 +140,10 @@ function SerializeAllyDestroyData($uniqueID, $lostAbilities, $isUpgraded, $upgra
 function DeserializeAllyDestroyData($data) {
     $arr=explode(LAYER_DATA_SEPARATOR,$data);
     $uniqueID=$arr[0];
-    $lostAbilities=$arr[1];
-    $isUpgraded=$arr[2];
-    $upgrades=explode(",",$arr[3]);
-    $upgradeOwners=explode(",",$arr[4]);
+    $lostAbilities = count($arr) > 1 ? $arr[1] : false;
+    $isUpgraded = count($arr) > 2 ? $arr[2] : false;
+    $upgrades = count($arr) > 3 && $arr[3] != "" ? explode(",",$arr[3]) : [];
+    $upgradeOwners = count($arr) > 4 && $arr[4] != "" ? explode(",",$arr[4]) : [];
     $upgradesWithOwnerData=[];
     for($i=0;$i<count($upgrades);++$i) {
         $upgradesWithOwnerData[2*$i]=$upgrades[$i];
