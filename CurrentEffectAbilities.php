@@ -258,6 +258,7 @@ function EffectAttackModifier($cardID, $playerID="")
     case "7979348081": return 1;//Kraken
     case "6406254252": return 2;//Soulless One
     //Jump to Lightspeed
+    case "6354077246": return 1;//Black Squadron Scout Wing
     case "6300552434": return -1;//Gold Leader
     case "7924461681": return 1;//Leia Organa
     case "4334684518+2": return 2;//Tandem Assault
@@ -907,6 +908,7 @@ function IsCombatEffectActive($cardID)
     case "2395430106"://Republic Tactical Officer
     case "6406254252"://Soulless One
     //Jump to Lightspeed
+    case "6354077246"://Black Squadron Scout Wing
     case "0616724418"://Han Solo Leader
     case "6300552434"://Gold Leader
     case "7924461681"://Leia Organa

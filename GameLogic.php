@@ -212,7 +212,6 @@ function DecisionQueueStaticEffect($phase, $player, $parameter, $lastResult)
         //case "ITEMSMAX": $rv = SearchItems($player, "", "", $subparam); break;//FAB
         case "EQUIP": $rv = GetEquipmentIndices($player); break;
         case "EQUIP0": $rv = GetEquipmentIndices($player, 0); break;
-        case "EQUIPCARD": $rv = FindCharacterIndex($player, $subparam); break;
         case "EQUIPONCC": $rv = GetEquipmentIndices($player, onCombatChain:true); break;
         case "CCAA": $rv = SearchCombatChainLink($player, "AA"); break;
         case "CCDEFLESSX": $rv = SearchCombatChainLink($player, "", "", -1, -1, "", "", false, false, -1, false, -1, $subparam); break;
@@ -704,15 +703,26 @@ function DecisionQueueStaticEffect($phase, $player, $parameter, $lastResult)
         case "DEALDAMAGE":
           // Important: use MZOpHelpers.php DamageStringBuilder() function for param structure
           if($lastResult == "") return "";
-          $targetArr = explode("-", $lastResult);
+          $targetMZIndex = $lastResult;
+
+          // Get mz index from unique ID
+          if (is_numeric($lastResult)) {
+            $ally = new Ally($lastResult);
+            $targetMZIndex = $ally->MZIndex();
+          } else if (str_contains("BASE", $lastResult)) {
+            $character = new Character($lastResult);
+            $targetMZIndex = $character->MZIndex();
+          }
+
+          $targetArr = explode("-", $targetMZIndex);
           $targetPlayer = ($targetArr[0] == "MYCHAR" || $targetArr[0] == "MYALLY" ? $player : ($player == 1 ? 2 : 1));
           $sourcePlayer = count($parameterArr) > 2 ? $parameterArr[2] : ($targetPlayer == 1 ? 2 : 1);
           $fromUnitEffect = count($parameterArr) > 3 && (bool)$parameterArr[3];
           $preventable = count($parameterArr) > 4 ? $parameterArr[4] == 1 : 1;
           if($targetArr[0] == "MYALLY" || $targetArr[0] == "THEIRALLY") {
-            $isAttackTarget = GetAttackTarget() == $lastResult;
-            $isAttacker = AttackerMZID($player) == $lastResult;
-            $ally = new Ally($lastResult);
+            $isAttackTarget = GetAttackTarget() == $targetMZIndex;
+            $isAttacker = AttackerMZID($player) == $targetMZIndex;
+            $ally = new Ally($targetMZIndex);
             $attackerHasOverwhelm = HasOverwhelm($ally->CardID(), $ally->Controller(), $ally->Index());
             $destroyed = $ally->DealDamage($parameterArr[1],
                 enemyDamage:(count($parameterArr) > 2 && $sourcePlayer != $targetPlayer),
@@ -1873,14 +1883,6 @@ function DecisionQueueStaticEffect($phase, $player, $parameter, $lastResult)
         return "PASS";
       }
       return $lastResult;
-    case "ADDATTACKCOUNTERS":
-      $lastResultArr = explode("-", $lastResult);
-      $zone = $lastResultArr[0];
-      $zoneDS = &GetMZZone($player, $zone);
-      $index = $lastResultArr[1];
-      if($zone == "MYCHAR" || $zone == "THEIRCHAR") $zoneDS[$index+3] += $parameter;
-      else if($zone == "MYAURAS" || $zone == "THEIRAURAS") $zoneDS[$index+3] += $parameter;
-      return $lastResult;
     case "MODDEFCOUNTER":
       if($lastResult == "") return $lastResult;
       $character = &GetPlayerCharacter($player);
@@ -1964,8 +1966,8 @@ function DecisionQueueStaticEffect($phase, $player, $parameter, $lastResult)
       $lastResultArr = explode(",", $lastResult);
       $params = explode(",", $parameter);
       for($i = 0; $i < count($lastResultArr); ++$i) {
-        $mzIndex = explode("-", $lastResultArr[$i]);
-        $target = (str_starts_with($mzIndex[0], "MY")) ? $player : ($player == 1 ? 2 : 1);
+        $targetMZIndex = explode("-", $lastResultArr[$i]);
+        $target = (str_starts_with($targetMZIndex[0], "MY")) ? $player : ($player == 1 ? 2 : 1);
         DamageTrigger($target, $params[0], $params[1], GetMZCard($target, $lastResultArr[$i]));
       }
       return $lastResult;
@@ -2104,12 +2106,12 @@ function DecisionQueueStaticEffect($phase, $player, $parameter, $lastResult)
       $otherPlayer = ($player == 1 ? 2 : 1);
       $params = explode(",", $parameter);
       for($i = 0; $i < count($lastResultArr); ++$i) {
-        $mzIndex = explode("-", $lastResultArr[$i]);
-        switch($mzIndex[0]) {
+        $targetMZIndex = explode("-", $lastResultArr[$i]);
+        switch($targetMZIndex[0]) {
           case "MYITEMS":
             $items = &GetItems($player);
-            $items[$mzIndex[1] + 1 ] += 1;
-            WriteLog(CardLink($items[$mzIndex[1]], $items[$mzIndex[1]]) . " gained a steam counter");
+            $items[$targetMZIndex[1] + 1 ] += 1;
+            WriteLog(CardLink($items[$targetMZIndex[1]], $items[$targetMZIndex[1]]) . " gained a steam counter");
             break;
           default: break;
         }
@@ -2125,13 +2127,13 @@ function DecisionQueueStaticEffect($phase, $player, $parameter, $lastResult)
       }
       return $lastResult;
     case "PROCESSDAMAGEPREVENTION":
-      $mzIndex = explode("-", $lastResult);
+      $targetMZIndex = explode("-", $lastResult);
       $params =  explode("-", $parameter);
-      switch($mzIndex[0])
+      switch($targetMZIndex[0])
       {
         //case "MYAURAS": $damage = AuraTakeDamageAbility($player, intval($mzIndex[1]), $params[0], $params[1]); break;//FAB
-        case "MYCHAR": $damage = CharacterTakeDamageAbility($player, intval($mzIndex[1]), $params[0], $params[1]); break;
-        case "MYALLY": $damage = AllyTakeDamageAbilities($player, intval($mzIndex[1]), $params[0], $params[1]); break;
+        case "MYCHAR": $damage = CharacterTakeDamageAbility($player, intval($targetMZIndex[1]), $params[0], $params[1]); break;
+        case "MYALLY": $damage = AllyTakeDamageAbilities($player, intval($targetMZIndex[1]), $params[0], $params[1]); break;
         default: break;
       }
       if($damage < 0) $damage = 0;
@@ -2146,9 +2148,6 @@ function DecisionQueueStaticEffect($phase, $player, $parameter, $lastResult)
       for($i=0; $i<count($cards); ++$i) {
         AddBottomDeck($cards[$i], $player);
       }
-      return "";
-    case "EQUIPCARD":
-      EquipCard($player, $parameter);
       return "";
     case "ATTACK":
       global $CCS_WeaponIndex, $CS_PlayIndex;
@@ -2314,5 +2313,27 @@ function DecisionQueueStaticEffect($phase, $player, $parameter, $lastResult)
       break;
     default:
       return "NOTSTATIC";
+  }
+}
+
+function AddWhenPlayCardAbilityLayers($cardID, $from, $uniqueID = "-", $resourcesPaid=-1) {
+  global $currentPlayer;
+
+  foreach ([1, 2] as $p) {
+    $characters = &GetPlayerCharacter($p);
+    for ($i = 0; $i < count($characters); $i += CharacterPieces()) {
+      if (CharacterHasWhenPlayCardAbility($p, $i, $cardID, $from)) {
+        $targetData = implode(",", [$characters[$i], $p, $characters[$i+5], $cardID, $uniqueID]); // $cardID, $player, $numUses, $playedCardID, $uniqueID
+        AddLayer("TRIGGER", $currentPlayer, "WHENPLAYCARDABILITY", $targetData, $from, $characters[$i + 3]);
+      }
+    }
+
+    $allies = &GetAllies($p);
+    for ($i = 0; $i < count($allies); $i += AllyPieces()) {
+      if (AllyHasWhenPlayCardAbility($cardID, $uniqueID, $from, $allies[$i], $p, $i, $resourcesPaid)) {
+        $targetData = implode(",", [$allies[$i], $p, $allies[$i+8], $cardID, $uniqueID]); // $cardID, $player, $numUses, $playedCardID, $uniqueID
+        AddLayer("TRIGGER", $currentPlayer, "WHENPLAYCARDABILITY", $targetData, $from, $allies[$i + 5]);
+      }
+    }
   }
 }

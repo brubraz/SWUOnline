@@ -356,7 +356,7 @@ if ($lastUpdate != 0 && $cacheVal <= $lastUpdate) {
         $sType = "Off-Hand";
       }
     }
-    if (CardType($theirCharacter[$i]) == "W") $atkCounters = $theirCharacter[$i + 3];
+    // if (CardType($theirCharacter[$i]) == "W") $atkCounters = $theirCharacter[$i + 3];
     if ($theirCharacter[$i + 2] > 0) $counters = $theirCharacter[$i + 2];
     $counters = $theirCharacter[$i + 1] != 0 ? $counters : 0;
     $characterContents[] = JSONRenderedCard(cardNumber: $theirCharacter[$i], overlay: ($theirCharacter[$i+1] != 2 ? 1 : 0), counters: $counters, defCounters: $theirCharacter[$i+4], atkCounters: $atkCounters, controller: $otherPlayer, type: $type, sType: $sType, isFrozen: ($theirCharacter[$i+8] == 1), onChain: ($theirCharacter[$i+6] == 1), isBroken: ($theirCharacter[$i+1] == 0));
@@ -428,7 +428,7 @@ if ($lastUpdate != 0 && $cacheVal <= $lastUpdate) {
     $restriction = "";
     $counters = 0;
     $atkCounters = 0;
-    if (CardType($myCharacter[$i]) == "W") $atkCounters = $myCharacter[$i + 3];
+    // if (CardType($myCharacter[$i]) == "W") $atkCounters = $myCharacter[$i + 3];
     if ($myCharacter[$i + 2] > 0) $counters = $myCharacter[$i + 2];
     $playable = $playerID == $currentPlayer && $myCharacter[$i + 1] == 2 && IsPlayable($myCharacter[$i], $turn[0], "CHAR", $i, $restriction);
     $border = CardBorderColor($myCharacter[$i], "CHAR", $playable);

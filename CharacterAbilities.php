@@ -44,11 +44,10 @@ class Character {
   }
 
   // Returns the unique ID of the character
-  // B<playerID> for base character
-  // L<playerID> for leader character
+  // P<playerID>BASE for base character
+  // P<playerID>LEADER for leader character
   public function UniqueId() {
-    $characterType = $this->index === 0 ? "BASE" : "LEADER";
-    return "P" . $this->playerID . $characterType;
+    return $this->characters[$this->index + 3];
   }
 
   public function CardId() {
@@ -86,7 +85,15 @@ class Character {
   public function MZIndex() {
     global $currentPlayer;
     return ($currentPlayer == $this->playerID ? "MYCHAR-" : "THEIRCHAR-") . $this->index;
-  }  
+  }
+
+  public function Exists() {
+    return $this->index != -1;
+  }
+
+  public function IsReady() {
+    return $this->Exists() && $this->characters[$this->index + 1] == 2;
+  }
 }
 
 function PutCharacterIntoPlayForPlayer($cardID, $player)
@@ -318,54 +325,6 @@ function MainCharacterGrantsGoAgain()
 //   return $modifier;
 // }
 
-function EquipCard($player, $card)
-{
-  $char = &GetPlayerCharacter($player);
-  $lastWeapon = 0;
-  $replaced = 0;
-  $numHands = 0;
-  //Replace the first destroyed weapon; if none you can't re-equip
-  for($i=CharacterPieces(); $i<count($char) && !$replaced; $i+=CharacterPieces())
-  {
-    if(CardType($char[$i]) == "W")
-    {
-      $lastWeapon = $i;
-      if($char[$i+1] == 0)
-      {
-        $char[$i] = $card;
-        $char[$i+1] = 2;
-        $char[$i+2] = 0;
-        $char[$i+3] = 0;
-        $char[$i+4] = 0;
-        $char[$i+5] = 1;
-        $char[$i+6] = 0;
-        $char[$i+7] = 0;
-        $char[$i+8] = 0;
-        $char[$i+9] = 2;
-        $char[$i+10] = 0;
-        $replaced = 1;
-      }
-      else if(Is1H($char[$i])) ++$numHands;
-      else $numHands += 2;
-    }
-  }
-  if($numHands < 2 && !$replaced)
-  {
-    $insertIndex = $lastWeapon + CharacterPieces();
-    array_splice($char, $insertIndex, 0, $card);
-    array_splice($char, $insertIndex+1, 0, 2);
-    array_splice($char, $insertIndex+2, 0, 0);
-    array_splice($char, $insertIndex+3, 0, 0);
-    array_splice($char, $insertIndex+4, 0, 0);
-    array_splice($char, $insertIndex+5, 0, 1);
-    array_splice($char, $insertIndex+6, 0, 0);
-    array_splice($char, $insertIndex+7, 0, 0);
-    array_splice($char, $insertIndex+8, 0, 0);
-    array_splice($char, $insertIndex+9, 0, 2);
-    array_splice($char, $insertIndex+10, 0, 0);
-  }
-}
-
 function ShiyanaCharacter($cardID, $player="")
 {
   global $currentPlayer;
@@ -402,6 +361,112 @@ function CharacterTriggerInGraveyard($cardID)
 {
   switch($cardID) {
     default: return false;
+  }
+}
+
+function CharacterHasWhenPlayCardAbility($player, $characterIndex, $playedCardID, $playedFrom): bool {
+  global $currentPlayer;
+  $otherPlayer = ($player == 1 ? 2 : 1);
+  $character = new Character("MYCHAR-" . $characterIndex, $player);
+  if(LeaderAbilitiesIgnored()) return false;
+
+  // When you play a card
+  if ($player == $currentPlayer) {
+    switch($character->CardID()) {
+      case "3045538805"://Hondo Ohnaka
+        return $character->IsReady() && $playedFrom == "RESOURCES";
+      case "1384530409"://Cad Bane
+        return $character->IsReady() && TraitContains($playedCardID, "Underworld", $player) && SearchCount(SearchAllies($otherPlayer)) > 0;
+      case "2358113881"://Quinlan Vos
+        if ($character->IsReady() && DefinedTypesContains($playedCardID, "Unit", $player)) {
+          $cardCost = CardCost($playedCardID);
+          $theirAllies = &GetTheirAllies($player);
+
+          for ($j = 0; $j < count($theirAllies); $j += AllyPieces()) {
+            if (CardCost($theirAllies[$j]) == $cardCost) {
+              return true;
+            }
+          }
+        }
+        return false;
+      case "9005139831"://The Mandalorian Leader
+        return $character->IsReady() && (DefinedTypesContains($playedCardID, "Upgrade", $player) || PilotWasPlayed($player, $playedCardID));
+      case "9334480612"://Boba Fett (Daimyo)
+        return $character->IsReady() 
+          && DefinedTypesContains($playedCardID, "Unit", $player)
+          && !PilotWasPlayed($player, $playedCardID)
+          && HasKeyword($playedCardID, "Any", $player);
+      default:
+        break;
+    }
+  } else { // When an opponent plays a card
+  }
+
+  return false;
+}
+
+function CharacterPlayCardAbility($player, $cardID, $uniqueID, $numUses, $playedCardID, $playedFrom, $playedUniqueID) {
+  global $currentPlayer, $CS_PlayedAsUpgrade;
+  $otherPlayer = $player == 1 ? 2 : 1;
+  $character = new Character($uniqueID, $player);
+
+  // When you play a card
+  if ($player == $currentPlayer) {
+    switch($cardID) {
+      case "3045538805"://Hondo Ohnaka Leader
+        if ($character->IsReady()) {
+          AddDecisionQueue("MULTIZONEINDICES", $player, "MYALLY&THEIRALLY");
+          AddDecisionQueue("SETDQCONTEXT", $player, "Choose a unit to give an experience token", 1);
+          AddDecisionQueue("MAYCHOOSEMULTIZONE", $player, "<-", 1);
+          AddDecisionQueue("MZOP", $player, "ADDEXPERIENCE", 1);
+          AddDecisionQueue("EXHAUSTCHARACTER", $player, $character->Index(), 1);
+        }
+        break;
+      case "1384530409"://Cad Bane Leader ability
+        if ($character->IsReady() && SearchCount(SearchAllies($otherPlayer)) > 0) {
+          AddDecisionQueue("YESNO", $player, "if you want use Cad Bane's ability");
+          AddDecisionQueue("NOPASS", $player, "-");
+          AddDecisionQueue("EXHAUSTCHARACTER", $player, $character->Index(), 1);
+          AddDecisionQueue("MULTIZONEINDICES", $otherPlayer, "MYALLY", 1);
+          AddDecisionQueue("SETDQCONTEXT", $otherPlayer, "Choose a unit to deal 1 damage to", 1);
+          AddDecisionQueue("CHOOSEMULTIZONE", $otherPlayer, "<-", 1);
+          AddDecisionQueue("MZOP", $otherPlayer, DealDamageBuilder(1, $player), 1);
+        }
+        break;
+      case "2358113881"://Quinlan Vos
+        if ($character->IsReady()) {
+          $cost = CardCost($playedCardID);
+          AddDecisionQueue("MULTIZONEINDICES", $player, "THEIRALLY:minCost=" . $cost . ";maxCost=" . $cost);
+          AddDecisionQueue("SETDQCONTEXT", $player, "Choose a unit to deal 1 damage", 1);
+          AddDecisionQueue("MAYCHOOSEMULTIZONE", $player, "<-", 1);
+          AddDecisionQueue("MZOP", $player, DealDamageBuilder(1, $player), 1);
+          AddDecisionQueue("EXHAUSTCHARACTER", $player, $character->Index(), 1);
+        }
+        break;
+      case "9005139831"://Mandalorian Leader Ability
+        if ($character->IsReady()) {
+          AddDecisionQueue("MULTIZONEINDICES", $player, "THEIRALLY:maxHealth=4");
+          AddDecisionQueue("MZFILTER", $player, "status=1", 1);
+          AddDecisionQueue("SETDQCONTEXT", $player, "Choose a unit to exhaust", 1);
+          AddDecisionQueue("MAYCHOOSEMULTIZONE", $player, "<-", 1);
+          AddDecisionQueue("MZOP", $player, "REST", 1);
+          AddDecisionQueue("EXHAUSTCHARACTER", $player, $character->Index(), 1);
+        }
+        break;
+      case "9334480612"://Boba Fett (Daimyo)
+        if ($character->IsReady()) {
+          AddDecisionQueue("MULTIZONEINDICES", $player, "MYALLY");
+          AddDecisionQueue("SETDQCONTEXT", $player, "Choose a card to give +1 power");
+          AddDecisionQueue("MAYCHOOSEMULTIZONE", $player, "<-", 1);
+          AddDecisionQueue("MZOP", $player, "GETUNIQUEID", 1);
+          AddDecisionQueue("ADDLIMITEDCURRENTEFFECT", $player, "9334480612,HAND", 1);
+          AddDecisionQueue("EXHAUSTCHARACTER", $player, $character->Index(), 1);
+        }
+        break;
+      default:
+        break;
+    }
+  } else { // When an oponent plays a card
   }
 }
 

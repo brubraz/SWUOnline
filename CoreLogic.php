@@ -275,92 +275,6 @@ function ArsenalAttackModifier()
 //   return $modifier;
 // }
 
-function CharacterPlayCardAbilities($cardID, $from)
-{
-  global $currentPlayer;
-  $character = &GetPlayerCharacter($currentPlayer);
-  for($i=0; $i<count($character); $i+=CharacterPieces())
-  {
-    if($character[$i+1] != 2) continue;
-    $characterID = ShiyanaCharacter($character[$i]);
-    switch($characterID)
-    {
-
-      default:
-        break;
-    }
-  }
-  $otherPlayer = ($currentPlayer == 1 ? 2 : 1);
-  $otherCharacter = &GetPlayerCharacter($otherPlayer);
-  for($i=0; $i<count($otherCharacter); $i+=CharacterPieces())
-  {
-    $characterID = $otherCharacter[$i];
-    switch($characterID)
-    {
-      default:
-        break;
-    }
-  }
-}
-
-function MainCharacterPlayCardAbilities($cardID, $from)
-{
-  global $currentPlayer, $mainPlayer, $CS_NumNonAttackCards;
-  if(LeaderAbilitiesIgnored()) return;
-
-  $character = &GetPlayerCharacter($currentPlayer);
-  for($i = 0; $i < count($character); $i += CharacterPieces()) {
-    if($character[$i+1] != 2) continue;
-    switch($character[$i]) {
-      case "3045538805"://Hondo Ohnaka
-        if($from == "RESOURCES") {
-          AddLayer("TRIGGER", $currentPlayer, "3045538805");
-        }
-        break;
-      case "1384530409"://Cad Bane
-        $otherPlayer = ($currentPlayer == 1 ? 2 : 1);
-        if ($from != 'PLAY' && $from != 'EQUIP' && TraitContains($cardID, "Underworld", $currentPlayer) && SearchCount(SearchAllies($otherPlayer)) > 0) {
-          // Note - this is a bit of a hack by sending the index in as the unique ID
-          AddLayer("TRIGGER", $currentPlayer, "1384530409");
-        }
-        break;
-      case "2358113881"://Quinlan Vos
-        if($from != 'PLAY' && $from != "EQUIP" && DefinedTypesContains($cardID, "Unit", $currentPlayer)) {
-          $cardCost = CardCost($cardID);
-          $theirAllies = &GetTheirAllies($currentPlayer);
-          $hasValidTarget = false;
-
-          for ($j = 0; $j < count($theirAllies); $j += AllyPieces()) {
-            if (CardCost($theirAllies[$j]) == $cardCost) {
-              $hasValidTarget = true;
-              break;
-            }
-          }
-
-          if ($hasValidTarget) {
-            AddLayer("TRIGGER", $currentPlayer, "2358113881");
-          }
-        }
-        break;
-      case "9005139831"://The Mandalorian Leader
-        if(DefinedTypesContains($cardID, "Upgrade", $currentPlayer) || PilotWasPlayed($currentPlayer, $cardID)) {
-          AddLayer("TRIGGER", $currentPlayer, "9005139831");
-        }
-        break;
-      case "9334480612"://Boba Fett (Daimyo)
-        if($from != "PLAY"
-            && DefinedTypesContains($cardID, "Unit", $currentPlayer)
-            && !PilotWasPlayed($currentPlayer, $cardID)
-            && HasKeyword($cardID, "Any", $currentPlayer)
-            && !SearchCurrentLayers("TRIGGER", $currentPlayer, "9334480612")) {
-          AddLayer("TRIGGER", $currentPlayer, "9334480612");
-        }
-        break;
-      default:
-        break;
-    }
-  }
-}
 
 function ArsenalPlayCardAbilities($cardID)
 {
@@ -1778,6 +1692,13 @@ function CanConfirmPhase($phase) {
     return true;
   }
 
+  function TargetAlly() {
+    global $mainPlayer, $CS_LayerTarget;
+    $target = GetClassState($mainPlayer, $CS_LayerTarget);
+    $ally = new Ally($target, $mainPlayer);
+    return $ally;
+  }
+  
   function AttackerAlly() {
     global $mainPlayer;
     $attackerMZ = AttackerMZID($mainPlayer);
@@ -3535,8 +3456,10 @@ function PlayAbility($cardID, $from, $resourcesPaid, $target = "-", $additionalC
       if($mzArr[0] == "MYALLY") {
         $ally = new Ally($target);
         if(!$ally->IsExhausted()) {
-          AddDecisionQueue("PASSPARAMETER", $currentPlayer, $target);
-          AddDecisionQueue("MZOP", $currentPlayer, "ATTACK");
+          AddDecisionQueue("YESNO", $currentPlayer, "if you want to attack with " . CardLink($ally->CardID(), $ally->CardID()));
+          AddDecisionQueue("NOPASS", $currentPlayer, "-");
+          AddDecisionQueue("PASSPARAMETER", $currentPlayer, $target, 1);
+          AddDecisionQueue("MZOP", $currentPlayer, "ATTACK", 1);
         }
       }
       break;
@@ -6973,6 +6896,7 @@ function AfterPlayedByAbility($cardID) {
       $otherPlayer = $currentPlayer == 1 ? 2 : 1;
       AddDecisionQueue("SETDQCONTEXT", $otherPlayer, "Choose a unit to ready");
       AddDecisionQueue("MULTIZONEINDICES", $otherPlayer, "MYALLY");
+      AddDecisionQueue("MZFILTER", $otherPlayer, "status=0", 1);
       AddDecisionQueue("MAYCHOOSEMULTIZONE", $otherPlayer, "<-", 1);
       AddDecisionQueue("MZOP", $otherPlayer, "READY", 1);
       break;
