@@ -184,11 +184,12 @@ include_once 'Header.php';
   </div>
 
   <div class="petranaki-news container bg-yellow">
-    <h2>News</h2>
+    <h2>News</h2>  
     <div style="position: relative;">
       <div style='vertical-align:middle; text-align: start;'>
         <img src="./Images/jtl-han-solo.webp" style="width: 100%; height: 200px; object-fit: cover; border-radius: 10px;">
         <h3 style="margin: 15px 0; display: block;">The Classic Force Awakens</h3>
+        <p>All  Set 1-4 cards are now implemeneted.</p>
         <p>Petranaki is the original version of Karabast, and it will continue to be available for those who prefer to stick with the classic experience. The project will keep evolving with updates designed to enhance gameplay, offering a fast and easy way to enjoy and sharpen your skills with your favorite decks.</p>
         <p>Join our <a href="https://discord.gg/ep9fj8Vj3F" target="_blank" rel="noopener noreferrer">new Discord server</a> to stay up-to-date, get the latest news, and share your feedback. May the Force guide your cards!</p>
         <!-- <p>Join our new Discord server at <a href="https://discord.gg/ep9fj8Vj3F" target="_blank" rel="noopener noreferrer">Petranaki</a> for the latest updates, news, and to share your feedback. We look forward to connecting with you!</p> -->
