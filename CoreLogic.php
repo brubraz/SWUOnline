@@ -4383,6 +4383,8 @@ function PlayAbility($cardID, $from, $resourcesPaid, $target = "-", $additionalC
       if ($target != "-") {
         $ally = new Ally($target);
         $totalOnAttackAbilities = SpecificAllyAttackAbilities($ally->UniqueID(), reportMode:true);
+        $totalOnAttackAbilities += RestoreAmount($ally->CardID(), $ally->Controller(), $ally->Index()) > 0 ? 1 : 0;
+        $totalOnAttackAbilities += HasSaboteur($ally->CardID(), $ally->Controller(), $ally->Index()) ? 1 : 0;
 
         AddDecisionQueue("PASSPARAMETER", $currentPlayer, "-");
         AddDecisionQueue("SETDQVAR", $currentPlayer, 0);
