@@ -369,6 +369,7 @@ function HasSentinel($cardID, $player, $index)
       case "3874382333"://Academy Graduate
       case "3064aff14f"://Lando Calrissian leader unit
         $hasSentinel = true;
+        break;
       //conditional upgrade sentinel
       case "9706341387"://Jarek Yeager
         $hasSentinel = SearchCount(SearchAllies($player, arena:"Ground")) > 0

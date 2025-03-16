@@ -132,7 +132,8 @@ function TypeToPlay($phase)
     case "INPUTCARDNAME":
       return "a card name";
     case "INDIRECTDAMAGEMULTIZONE":
-      return "indirect damage";
+    case "PARTIALMULTIDAMAGEMULTIZONE":
+    case "MAYMULTIDAMAGEMULTIZONE":
     case "MULTIDAMAGEMULTIZONE":
       return "damage";
   }
@@ -141,10 +142,16 @@ function TypeToPlay($phase)
 function VerbToPlay($phase)
 {
   switch ($phase) {
+    case "PARTIALMULTIDAMAGEMULTIZONE":
+    case "MAYMULTIDAMAGEMULTIZONE":
     case "MULTIDAMAGEMULTIZONE":
       return "deal";
     case "INDIRECTDAMAGEMULTIZONE":
       return "assign";
+    case "PARTIALMULTIHEALMULTIZONE":
+    case "MAYMULTIHEALMULTIZONE":
+    case "MULTIHEALMULTIZONE":
+      return "heal";
     default:
       return "choose";
   }

@@ -624,6 +624,14 @@ class Ally {
     AddCurrentTurnEffect($effectID, $this->PlayerID(), from:$from, uniqueID:$this->UniqueID());
   }
 
+  function AttachExperience() {
+    return $this->Attach("2007868442"); //Experience token
+  }
+
+  function AttachShield() {
+    return $this->Attach("8752877738"); //Shield token
+  }
+
   function Attach($cardID, $ownerID = null, $epicAction = false, $turnsInPlay = 0) {
     $receivingPilot = $this->ReceivingPilot($cardID) || IsUnconventionalPilot($cardID);
     $subcardUniqueID = $this->AddSubcard($cardID, $ownerID, $receivingPilot, $epicAction, $turnsInPlay);

@@ -25,14 +25,14 @@ function DiscardPieces()
 //0 - Card ID
 //1 - Status (2=ready, 1=unavailable, 0=destroyed)
 //2 - Num counters
-//3 - Num attack counters
+//3 - Unique ID
 //4 - Num defense counters
 //5 - Num uses
 //6 - On chain (1 = yes, 0 = no)
 //7 - Flagged for destruction (1 = yes, 0 = no)
 //8 - Frozen (1 = yes, 0 = no)
 //9 - Is Active (2 = always active, 1 = yes, 0 = no)
-//10 - Position (0 = normal, 1 = distant)
+//10 - Counters (damage/healing counters)
 function CharacterPieces()
 {
   return 11;

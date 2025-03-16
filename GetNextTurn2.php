@@ -463,7 +463,7 @@ if ($lastUpdate != 0 && $cacheVal <= $lastUpdate) {
           case "AFTERDESTROYFRIENDLYABILITY":
           case "AFTERDESTROYTHEIRSABILITY":
             return "When Defeated";
-          case "ALLYPLAYCARDABILITY":
+          case "WHENPLAYCARDABILITY":
           case "AMBUSH":
           case "SHIELDED":
             return "When Played";
@@ -521,7 +521,7 @@ if ($lastUpdate != 0 && $cacheVal <= $lastUpdate) {
 
       // Add the card to the content
       $cardId = $layerName;
-      if ($cardId == "ALLYPLAYCARDABILITY")
+      if ($cardId == "WHENPLAYCARDABILITY")
         $cardId = explode(',', $layers[$i + 3])[0];
       if ($cardId == "AFTERDESTROYABILITY")
         $cardId = $layers[$i + 3];

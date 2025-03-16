@@ -565,11 +565,11 @@ function SearchLimitedCurrentTurnEffects($cardID, $player, $uniqueID = -1, $remo
   return -1;
 }
 
-function SearchCurrentLayers($type, $player, $cardID)
+function SearchCurrentLayers($type, $player, $cardID, $uniqueID = "")
 {
   global $layers;
   for ($i = 0; $i < count($layers); $i += LayerPieces()) {
-    if($layers[$i] == $type && $layers[$i+1] == $player && $layers[$i+2] == $cardID) return true;
+    if ($layers[$i] == $type && $layers[$i+1] == $player && $layers[$i+2] == $cardID && ($uniqueID == "" || $layers[$i+5] == $uniqueID)) return true;
   }
 
   return false;

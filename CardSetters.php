@@ -92,7 +92,7 @@ function AddCharacter($cardID, $player, $counters=0, $status=2)
   $char[] = $cardID;
   $char[] = $status;
   $char[] = $counters;
-  $char[] = 0;
+  $char[] = "P" . $player . (CardIDIsBase($cardID) ? "BASE" : "LEADER");
   $char[] = 0;
   $char[] = 1;
   $char[] = 0;

@@ -1766,7 +1766,7 @@ function PlayCardSkipCosts($cardID, $from)
   if ($turn[0] != "B" || (count($layers) > 0 && $layers[0] != "")) {
     //if (HasBoost($cardID)) Boost();//FAB
     GetLayerTarget($cardID);
-    MainCharacterPlayCardAbilities($cardID, $from);
+    // MainCharacterPlayCardAbilities($cardID, $from);
     //AuraPlayAbilities($cardID, $from);//FAB
   }
   PlayCardEffect($cardID, $from, 0);
@@ -2227,7 +2227,6 @@ function PlayCardEffect($cardID, $from, $resourcesPaid, $target = "-", $addition
     if ($from != "PLAY") {
       CurrentEffectPlayAbility($cardID, $from);
       ArsenalPlayCardAbilities($cardID);
-      CharacterPlayCardAbilities($cardID, $from);
     }
     $EffectContext = $cardID;
     if (!$chainClosed) {
@@ -2242,7 +2241,6 @@ function PlayCardEffect($cardID, $from, $resourcesPaid, $target = "-", $addition
         //Relentless
         WriteLog("<span style='color:red;'>The event does nothing because of Relentless.</span>");
       } else {
-        MainCharacterPlayCardAbilities($cardID, $from);
         //AuraPlayAbilities($cardID, $from);//FAB
         PermanentPlayAbilities($cardID, $from);
 
@@ -2285,7 +2283,7 @@ function PlayCardEffect($cardID, $from, $resourcesPaid, $target = "-", $addition
       if (HasAmbush($cardID, $currentPlayer, $index, $from)) {
         AddLayer("TRIGGER", $currentPlayer, "AMBUSH", "-", "-", $uniqueID);
       }
-      AddAllyPlayCardAbilityLayers($cardID, $from, $uniqueID, $resourcesPaid);
+      AddWhenPlayCardAbilityLayers($cardID, $from, $uniqueID, $resourcesPaid);
     }
     if (!$openedChain)
       ResolveGoAgain($cardID, $currentPlayer, $from);
@@ -2383,16 +2381,6 @@ function ArquitensAssaultCruiser($player, $cardID) {
       }
     }
   }
-}
-
-function LayersContainAnyWhenPlayAbilitiesForPlayer($player) {
-  global $layers;
-  for ($i=0; $i<count($layers); $i+=LayerPieces()) {
-    if ($layers[$i] == "TRIGGER" && $layers[$i+1] == $player && $layers[$i+2] == "ALLYPLAYCARDABILITY")
-      return true;
-  }
-
-  return false;
 }
 
 function ProcessAttackTarget()

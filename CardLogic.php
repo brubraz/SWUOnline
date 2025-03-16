@@ -296,7 +296,7 @@ function PrependLayer($cardID, $player, $parameter, $target = "-", $additionalCo
 
 function IsAbilityLayer($cardID)
 {
-  return $cardID == "TRIGGER" || $cardID == "PLAYABILITY" || $cardID == "PLAYCARDABILITY" || $cardID == "ATTACKABILITY" || $cardID == "ACTIVATEDABILITY" || $cardID == "ALLYPLAYCARDABILITY";
+  return $cardID == "TRIGGER" || $cardID == "PLAYABILITY" || $cardID == "PLAYCARDABILITY" || $cardID == "ATTACKABILITY" || $cardID == "ACTIVATEDABILITY" || $cardID == "WHENPLAYCARDABILITY";
 }
 
 function AddLayer($cardID, $player, $parameter, $target = "-", $additionalCosts = "-", $uniqueID = "-", $append = false)
@@ -531,7 +531,7 @@ function ContinueDecisionQueue($lastResult = "")
               // PLAYCARDABILITY already adds ally play card ability layers at the same window.
               // Other layers like PLAYABILITY should be resolved before ally play card ability layers.
               if ($layerName != "PLAYCARDABILITY" && $from != "PLAY" && $from != "EQUIP" && $from != "CHAR") {
-                AddAllyPlayCardAbilityLayers($cardID, $from, $uniqueID, $resourcesPaid);
+                AddWhenPlayCardAbilityLayers($cardID, $from, $uniqueID, $resourcesPaid);
               }
 
               $playText = PlayAbility($cardID, $from, $resourcesPaid, $target, $additionalCosts, $oppCardActive, uniqueId: $uniqueID);
@@ -685,9 +685,20 @@ function ProcessTrigger($player, $parameter, $uniqueID, $additionalCosts, $targe
       $ally = new Ally($uniqueID);
       $ally->Attach("8752877738");//Shield Token
       break;
-    case "ALLYPLAYCARDABILITY":
+    case "WHENPLAYCARDABILITY":
       $data = explode(",",$target); // $cardID, $player, $numUses, $playedCardID
-      AllyPlayCardAbility($data[1], $data[0], $uniqueID, $data[2], $data[3], from:$additionalCosts);
+      $cardID = $data[0];
+      $player = $data[1];
+      $numUses = $data[2];
+      $playedCardID = $data[3];
+      $playedUniqueID = $data[4];
+      $playedFrom = $additionalCosts;
+
+      if (IsAlly($cardID)) {
+        AllyPlayCardAbility($player, $cardID, $uniqueID, $numUses, $playedCardID, $playedFrom, $playedUniqueID);
+      } else {
+        CharacterPlayCardAbility($player, $cardID, $uniqueID, $numUses, $playedCardID, $playedFrom, $playedUniqueID);
+      }
       break;
     case "AFTERDESTROYTHEIRSABILITY":
       $data=explode(",",$target);
@@ -863,50 +874,6 @@ function ProcessTrigger($player, $parameter, $uniqueID, $additionalCosts, $targe
       AddDecisionQueue("ADDCURRENTEFFECT", $player, "7270736993", 1);
       AddDecisionQueue("PASSPARAMETER", $player, "{0}", 1);
       AddDecisionQueue("MZOP", $player, "PLAYCARD", 1);
-      break;
-    case "1384530409"://Cad Bane Leader ability
-      $otherPlayer = ($player == 1 ? 2 : 1);
-      if (SearchCount(SearchAllies($otherPlayer)) > 0) {
-        AddDecisionQueue("YESNO", $player, "if you want use Cad Bane's ability");
-        AddDecisionQueue("NOPASS", $player, "-");
-        AddDecisionQueue("EXHAUSTCHARACTER", $player, FindCharacterIndex($player, "1384530409"), 1);
-        AddDecisionQueue("MULTIZONEINDICES", $otherPlayer, "MYALLY", 1);
-        AddDecisionQueue("SETDQCONTEXT", $otherPlayer, "Choose a unit to deal 1 damage to", 1);
-        AddDecisionQueue("CHOOSEMULTIZONE", $otherPlayer, "<-", 1);
-        AddDecisionQueue("MZOP", $otherPlayer, DealDamageBuilder(1, $player), 1);
-      }
-      break;
-    case "9005139831"://Mandalorian Leader Ability
-      AddDecisionQueue("MULTIZONEINDICES", $player, "THEIRALLY:maxHealth=4");
-      AddDecisionQueue("SETDQCONTEXT", $player, "Choose a unit to exhaust", 1);
-      AddDecisionQueue("MAYCHOOSEMULTIZONE", $player, "<-", 1);
-      AddDecisionQueue("MZOP", $player, "REST", 1);
-      AddDecisionQueue("EXHAUSTCHARACTER", $player, FindCharacterIndex($player, "9005139831"), 1);
-      break;
-    case "2358113881"://Quinlan Vos
-      $allies = &GetAllies($player);
-      if(count($allies) == 0) break;
-      $cost = CardCost($allies[count($allies) - AllyPieces()]);
-      AddDecisionQueue("MULTIZONEINDICES", $player, "THEIRALLY:minCost=" . $cost . ";maxCost=" . $cost);
-      AddDecisionQueue("SETDQCONTEXT", $player, "Choose a unit to deal 1 damage", 1);
-      AddDecisionQueue("MAYCHOOSEMULTIZONE", $player, "<-", 1);
-      AddDecisionQueue("MZOP", $player, DealDamageBuilder(1, $player), 1);
-      AddDecisionQueue("EXHAUSTCHARACTER", $player, FindCharacterIndex($player, "2358113881"), 1);
-      break;
-    case "3045538805"://Hondo Ohnaka Leader
-      AddDecisionQueue("MULTIZONEINDICES", $player, "MYALLY&THEIRALLY");
-      AddDecisionQueue("SETDQCONTEXT", $player, "Choose a unit to give an experience token", 1);
-      AddDecisionQueue("MAYCHOOSEMULTIZONE", $player, "<-", 1);
-      AddDecisionQueue("MZOP", $player, "ADDEXPERIENCE", 1);
-      AddDecisionQueue("EXHAUSTCHARACTER", $player, FindCharacterIndex($player, "3045538805"), 1);
-      break;
-    case "9334480612"://Boba Fett (Daimyo)
-      PrependDecisionQueue("EXHAUSTCHARACTER", $player, FindCharacterIndex($player, "9334480612"), 1);
-      PrependDecisionQueue("ADDLIMITEDCURRENTEFFECT", $player, "9334480612,HAND", 1);
-      PrependDecisionQueue("MZOP", $player, "GETUNIQUEID", 1);
-      PrependDecisionQueue("MAYCHOOSEMULTIZONE", $player, "<-", 1);
-      PrependDecisionQueue("SETDQCONTEXT", $player, "Choose a card to give +1 power");
-      PrependDecisionQueue("MULTIZONEINDICES", $player, "MYALLY");
       break;
     case "0754286363"://The Mandalorian's Rifle
       AddDecisionQueue("MULTIZONEINDICES", $player, "THEIRALLY");
