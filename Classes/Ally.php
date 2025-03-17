@@ -711,6 +711,7 @@ class Ally {
   }
 
   function IsCloned() {
+    if (!$this->Exists()) return false;
     return $this->allies[$this->index + 13] == 1;
   }
 

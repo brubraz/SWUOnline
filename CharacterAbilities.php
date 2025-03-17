@@ -406,7 +406,7 @@ function CharacterHasWhenPlayCardAbility($player, $characterIndex, $playedCardID
 }
 
 function CharacterPlayCardAbility($player, $cardID, $uniqueID, $numUses, $playedCardID, $playedFrom, $playedUniqueID) {
-  global $currentPlayer, $CS_PlayedAsUpgrade;
+  global $currentPlayer;
   $otherPlayer = $player == 1 ? 2 : 1;
   $character = new Character($uniqueID, $player);
 

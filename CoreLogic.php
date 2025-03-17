@@ -2402,7 +2402,7 @@ function PlayAbility($cardID, $from, $resourcesPaid, $target = "-", $additionalC
 {
   global $currentPlayer, $layers, $CS_PlayIndex, $CS_OppIndex, $initiativePlayer, $CCS_CantAttackBase, $CS_NumAlliesDestroyed;
   global $CS_NumFighterAttacks, $CS_NumNonTokenVehicleAttacks, $CS_NumFirstOrderPlayed;
-  global $CS_PlayedAsUpgrade, $CS_NumUsesLeaderUpgrade1, $CS_NumUsesLeaderUpgrade2;
+  global $CS_NumUsesLeaderUpgrade1, $CS_NumUsesLeaderUpgrade2;
   global $CS_CachedLeader1EpicAction, $CS_CachedLeader2EpicAction;
   $index = GetClassState($currentPlayer, $CS_PlayIndex);
   $otherPlayer = $currentPlayer == 1 ? 2 : 1;
@@ -4383,6 +4383,8 @@ function PlayAbility($cardID, $from, $resourcesPaid, $target = "-", $additionalC
       if ($target != "-") {
         $ally = new Ally($target);
         $totalOnAttackAbilities = SpecificAllyAttackAbilities($ally->UniqueID(), reportMode:true);
+        $totalOnAttackAbilities += RestoreAmount($ally->CardID(), $ally->Controller(), $ally->Index()) > 0 ? 1 : 0;
+        $totalOnAttackAbilities += HasSaboteur($ally->CardID(), $ally->Controller(), $ally->Index()) ? 1 : 0;
 
         AddDecisionQueue("PASSPARAMETER", $currentPlayer, "-");
         AddDecisionQueue("SETDQVAR", $currentPlayer, 0);

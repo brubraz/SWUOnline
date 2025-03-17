@@ -389,7 +389,6 @@ function ProcessDecisionQueue()
 function CloseDecisionQueue()
 {
   global $turn, $decisionQueue, $dqState, $combatChain, $currentPlayer, $mainPlayer;
-  global $CS_PlayedAsUpgrade;
   $dqState[0] = "0";
   $turn[0] = $dqState[1];
   $turn[1] = $dqState[2];

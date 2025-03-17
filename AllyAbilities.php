@@ -1707,7 +1707,7 @@ function AllyAttackedAbility($attackTarget, $index) {
 
 function AllyHasWhenPlayCardAbility($playedCardID, $playedCardUniqueID, $from, $cardID, $player, $index, $resourcesPaid): bool
 {
-  global $currentPlayer, $CS_NumCardsPlayed, $CS_PlayedAsUpgrade;
+  global $currentPlayer, $CS_NumCardsPlayed;
   $thisAlly = new Ally("MYALLY-" . $index, $player);
   if($thisAlly->LostAbilities($playedCardID)) return false;
   $thisIsNewlyPlayedAlly = $thisAlly->UniqueID() == $playedCardUniqueID;
