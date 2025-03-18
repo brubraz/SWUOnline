@@ -1112,6 +1112,7 @@ function SpecificCardLogic($player, $parameter, $lastResult)
       for($i=0; $i<count($lastResult); ++$i) {
         $ally = new Ally("MYALLY-" . $lastResult[$i], $player);
         AddRoundEffect("c1700fc85b", $player, "c1700fc85b", $ally->UniqueID());
+        WriteLog(CardLink($ally->CardID(), $ally->CardID()) . " loses all abilities for this round.");
       }
       break;
     case "FOCUS_FIRE":
