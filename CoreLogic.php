@@ -3589,7 +3589,7 @@ function PlayAbility($cardID, $from, $resourcesPaid, $target = "-", $additionalC
       break;
     case "8606123385"://Lightspeed Assault
       AddDecisionQueue("MULTIZONEINDICES", $currentPlayer, "MYALLY:arena=Space");
-      AddDecisionQueue("SETDQCONTEXT", $currentPlayer, "Choose a friendly space unit");
+      AddDecisionQueue("SETDQCONTEXT", $currentPlayer, "Choose a friendly space unit to defeat");
       AddDecisionQueue("CHOOSEMULTIZONE", $currentPlayer, "<-", 1);
       AddDecisionQueue("SPECIFICCARD", $currentPlayer, "LIGHTSPEEDASSAULT", 1);
       break;

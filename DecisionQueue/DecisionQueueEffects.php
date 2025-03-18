@@ -630,8 +630,7 @@ function SpecificCardLogic($player, $parameter, $lastResult)
       AddDecisionQueue("MZOP", $player, DealDamageBuilder($damage,$player,isUnitEffect:1), 1);
       return $lastResult;
     case "LIGHTSPEEDASSAULT":
-      $controller = MZPlayerID($player, $lastResult);
-      $ally = new Ally($lastResult, $otherPlayer);
+      $ally = new Ally($lastResult);
       $currentPower = $ally->CurrentPower();
       $ally->Destroy();
       AddDecisionQueue("MULTIZONEINDICES", $player, "THEIRALLY:arena=Space");
@@ -640,13 +639,12 @@ function SpecificCardLogic($player, $parameter, $lastResult)
       AddDecisionQueue("SETDQVAR", $player, 0, 1);
       AddDecisionQueue("SPECIFICCARD", $player, "LIGHTSPEEDASSAULT2", 1);
       AddDecisionQueue("PASSPARAMETER", $player, "{0}", 1);
-      AddDecisionQueue("MZOP", $player, "DEALDAMAGE," . $currentPower, 1);
+      AddDecisionQueue("MZOP", $player, DealDamageBuilder($currentPower, $player), 1);
       return $lastResult;
     case "LIGHTSPEEDASSAULT2":
-      $controller = MZPlayerID($player, $lastResult);
-      $ally = new Ally($lastResult, $controller);
+      $ally = new Ally($lastResult);
       $power = $ally->CurrentPower();
-      IndirectDamage("8606123385", ($player == 1 ? 2 : 1), $power, false);
+      IndirectDamage("8606123385", $ally->Controller(), $power, false);
       return $lastResult;
     case "ALLWINGSREPORTIN":
       foreach ($lastResult as $index) {
