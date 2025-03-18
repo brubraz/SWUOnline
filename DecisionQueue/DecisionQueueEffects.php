@@ -977,6 +977,12 @@ function SpecificCardLogic($player, $parameter, $lastResult)
       if($ally->IsExhausted()) $ally->Ready();
       else $ally->Exhaust();
       break;
+    case "KASHYYYKDEFENDER":
+      $args = explode("-", $lastResult);
+      $ally = new Ally($args[0], $player);
+      $healAmount = $args[1];
+      $ally->DealDamage($healAmount);
+      break;
     //Jump to Lightspeed
     case "KIMOGILAHEAVYFIGHTER":
       $targets = explode(",", $lastResult);

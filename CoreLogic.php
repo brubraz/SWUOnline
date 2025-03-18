@@ -5311,13 +5311,16 @@ function PlayAbility($cardID, $from, $resourcesPaid, $target = "-", $additionalC
       break;
     case "8552292852"://Kashyyyk Defender
       AddDecisionQueue("MULTIZONEINDICES", $currentPlayer, "MYALLY&THEIRALLY");
-      AddDecisionQueue("MZFILTER", $currentPlayer, "index=MYALLY-" . $playAlly->Index());
-      AddDecisionQueue("MZFILTER", $currentPlayer, "damaged=0");
-      AddDecisionQueue("SETDQCONTEXT", $currentPlayer, "Choose a card to restore 2");
+      AddDecisionQueue("MZFILTER", $currentPlayer, "index=MYALLY-" . $playAlly->Index(), 1);
+      AddDecisionQueue("MZFILTER", $currentPlayer, "damaged=0", 1);
+      AddDecisionQueue("SETDQCONTEXT", $currentPlayer, "Choose a unit to heal up to 2 damage", 1);
       AddDecisionQueue("MAYCHOOSEMULTIZONE", $currentPlayer, "<-", 1);
-      AddDecisionQueue("MZOP", $currentPlayer, "RESTORE,2", 1);
-      AddDecisionQueue("UNIQUETOMZ", $currentPlayer, $playAlly->UniqueID(), 1);
-      AddDecisionQueue("MZOP", $currentPlayer, "DEALDAMAGE,2,$currentPlayer", 1);
+      AddDecisionQueue("PREPENDLASTRESULT", $currentPlayer, "2-", 1);
+      AddDecisionQueue("SETDQCONTEXT", $currentPlayer, "Heal up to 2 damage", 1);
+      AddDecisionQueue("PARTIALMULTIHEALMULTIZONE", $currentPlayer, "<-", 1);
+      AddDecisionQueue("MZOP", $currentPlayer, "MULTIHEAL", 1);
+      AddDecisionQueue("PREPENDLASTRESULT", $currentPlayer, $uniqueId . "-", 1);
+      AddDecisionQueue("SPECIFICCARD", $currentPlayer, "KASHYYYKDEFENDER", 1);
       break;
     case "7439418148"://Twice the Pride
       $ally = new Ally($target);
