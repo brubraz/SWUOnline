@@ -819,6 +819,9 @@ function ProcessTrigger($player, $parameter, $uniqueID, $additionalCosts, $targe
         }
       }
       break;
+    case "5942811090": //Luke Skywalker (You Still With Me?)
+      LukePilotPlotArmor($player, $target);
+      break;
     case "8655450523": //Count Dooku (Fallen Jedi)
       $powers=explode(",", $target);
       for($i=0;$i<count($powers);++$i) {
