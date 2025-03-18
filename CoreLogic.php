@@ -3569,9 +3569,10 @@ function PlayAbility($cardID, $from, $resourcesPaid, $target = "-", $additionalC
       AddDecisionQueue("SPECIFICCARD", $currentPlayer, "SWEEPTHEAREA", 1);
       break;
     case "2579248092"://Covering the Wing
-      CreateXWing($currentPlayer);
+      $xWingUniqueId = CreateXWing($currentPlayer);
       AddDecisionQueue("MULTIZONEINDICES", $currentPlayer, "MYALLY&THEIRALLY");
-      AddDecisionQueue("SETDQCONTEXT", $currentPlayer, "Choose a unit to give a shield");
+      AddDecisionQueue("MZFILTER", $currentPlayer, "uniqueID=" . $xWingUniqueId, 1);
+      AddDecisionQueue("SETDQCONTEXT", $currentPlayer, "Choose a unit to give a shield", 1);
       AddDecisionQueue("MAYCHOOSEMULTIZONE", $currentPlayer, "<-", 1);
       AddDecisionQueue("MZOP", $currentPlayer, "ADDSHIELD", 1);
       break;
@@ -3665,6 +3666,19 @@ function PlayAbility($cardID, $from, $resourcesPaid, $target = "-", $additionalC
         AddDecisionQueue("MULTIZONEINDICES", $currentPlayer, "MYALLY&THEIRALLY", 1);
         AddDecisionQueue("MAYCHOOSEMULTIZONE", $currentPlayer, "<-", 1);
         AddDecisionQueue("MZOP", $currentPlayer, "DEALDAMAGE,1,$currentPlayer,1", 1);
+      }
+      break;
+    case "7144880397"://Ahsoka Tano TWI
+      $abilityName = GetResolvedAbilityName($cardID, $from);
+      if ($from == "PLAY" && $abilityName == "Return" && $playAlly->Exists()) {
+        $upgrades = $playAlly->GetUpgrades(true);
+        for($i=0; $i<count($upgrades); $i+=SubcardPieces()) {
+          $playAlly->RemoveSubcard($upgrades[$i], skipDestroy:true);
+          if (!IsToken($upgrades[$i]) && !CardIDIsLeader($upgrades[$i])) {
+            AddHand($upgrades[$i+1], $upgrades[$i]);
+          }
+        }
+        MZBounce($currentPlayer, $playAlly->MZIndex());
       }
       break;
     case "4300219753"://Fett's Firespray

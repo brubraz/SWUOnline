@@ -819,6 +819,9 @@ function ProcessTrigger($player, $parameter, $uniqueID, $additionalCosts, $targe
         }
       }
       break;
+    case "5942811090": //Luke Skywalker (You Still With Me?)
+      LukePilotPlotArmor($player, $target);
+      break;
     case "8655450523": //Count Dooku (Fallen Jedi)
       $powers=explode(",", $target);
       for($i=0;$i<count($powers);++$i) {
@@ -1243,7 +1246,7 @@ function AdmiralHoldoWereNotAlone($player, $flipped) {
   $myAllies = GetAllies($player);
   $theirAllies = GetAllies($otherPlayer);
   for($i=0; $i<count($myAllies); $i+=AllyPieces()) {
-    if(AllyTraitContainsOrUpgradeTraitContains($myAllies[$i+5], "Resistance")) {
+    if(AllyTraitContainsOrUpgradeTraitContains($myAllies[$i+5], "Resistance") && $myAllies[$i] != "ccf9474416") {
       $indices[] = "MYALLY-" . $i;
     }
   }

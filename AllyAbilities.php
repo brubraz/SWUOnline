@@ -465,9 +465,9 @@ function DestroyAlly($player, $index,
   for($i=0; $i<count($upgradesWithOwnerData); $i+=SubcardPieces()) {
     if($upgradesWithOwnerData[$i] == "8752877738" || $upgradesWithOwnerData[$i] == "2007868442") continue; // Skip Shield and Experience tokens
     if($upgradesWithOwnerData[$i] == "6911505367") $discardPileModifier = "TTFREE";//Second Chance
-    if($upgradesWithOwnerData[$i] == "5942811090") {
+    if($upgradesWithOwnerData[$i] == "5942811090") {//Luke Skywalker (You Still With Me?)
       $subcard = new SubCard($ally, $i);
-      LukePilotPlotArmor($subcard->Owner(), $subcard->TurnsInPlay());
+      AddLayer("TRIGGER", $subcard->Owner(), $subcard->CardID(), $subcard->TurnsInPlay()); // We're adding a trigger to prevent bugs with A New Adventure, which clears the DQ after playing the card.
     }
     if(!CardIdIsLeader($upgradesWithOwnerData[$i]))
       AddGraveyard($upgradesWithOwnerData[$i], $upgradesWithOwnerData[$i+1], "PLAY");
@@ -646,6 +646,7 @@ function AllyPlayableExhausted(Ally $ally) {
       return SearchCount(SearchAlliesForTitle($ally->Controller(), "The Ghost")) > 0
         && NumResourcesAvailable($ally->Controller()) >= 1;
     case "4300219753"://Fett's Firespray
+    case "7144880397"://Ahsoka Tano TWI
     case "2471223947"://Frontline Shuttle
     case "1885628519"://Crosshair
     case "2b13cefced"://Fennec Shand Leader Unit
@@ -703,6 +704,8 @@ function AllyDoesAbilityExhaust($cardID) {
       return $abilityName != "Droid Attack";
     case "4300219753"://Fett's Firespray
       return $abilityName != "Exhaust";
+    case "7144880397"://Ahsoka Tano TWI
+      return $abilityName != "Return";
     case "2471223947"://Frontline Shuttle
       return $abilityName != "Shuttle";
     case "1885628519"://Crosshair
