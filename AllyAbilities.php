@@ -1056,7 +1056,7 @@ function AllyDestroyedAbility($player, $cardID, $uniqueID, $lostAbilities, $isUp
         AddDecisionQueue("MZOP", $player, "MULTIHEAL", 1);
         break;
       case "7072861308"://Profundity
-        AddDecisionQueue("SETDQCONTEXT", $player, "Choose player to draw 1 card");
+        AddDecisionQueue("SETDQCONTEXT", $player, "Choose player to discard 1 card");
         AddDecisionQueue("BUTTONINPUT", $player, "Yourself,Opponent");
         AddDecisionQueue("SPECIFICCARD", $player, "PROFUNDITY", 1);
         break;

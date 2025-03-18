@@ -6320,7 +6320,7 @@ function PlayAbility($cardID, $from, $resourcesPaid, $target = "-", $additionalC
       break;
     case "7072861308"://Profundity
       if($from != "PLAY") {
-        AddDecisionQueue("SETDQCONTEXT", $currentPlayer, "Choose player to draw 1 card");
+        AddDecisionQueue("SETDQCONTEXT", $currentPlayer, "Choose player to discard 1 card");
         AddDecisionQueue("BUTTONINPUT", $currentPlayer, "Yourself,Opponent");
         AddDecisionQueue("SPECIFICCARD", $currentPlayer, "PROFUNDITY", 1);
       }
