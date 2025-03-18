@@ -96,24 +96,6 @@ class Character {
   }
 }
 
-function PutCharacterIntoPlayForPlayer($cardID, $player)
-{
-  $char = &GetPlayerCharacter($player);
-  $index = count($char);
-  $char[] = $cardID;
-  $char[] = 2;
-  $char[] = CharacterCounters($cardID);
-  $char[] = 0;
-  $char[] = 0;
-  $char[] = 1;
-  $char[] = 0;
-  $char[] = 0;
-  $char[] = 0;
-  $char[] = 2;
-  $char[] = 0;
-  return $index;
-}
-
 function CharacterCounters ($cardID)
 {
   switch($cardID) {

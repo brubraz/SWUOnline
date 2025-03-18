@@ -589,16 +589,17 @@ function SpecificCardLogic($player, $parameter, $lastResult)
     case "THEANNIHILATOR":
       $otherPlayer = $player == 1 ? 2 : 1;
       $destroyedID = $lastResult;
+      $destroyedCardName = CardName($destroyedID);
       $hand = &GetHand($otherPlayer);
       for($i = count($hand) - 1; $i >= 0; $i -= HandPieces()) {
-        if($hand[$i] == $destroyedID) {
+        if(CardName($hand[$i]) == $destroyedCardName) {
           DiscardCard($otherPlayer, $i);
         }
       }
       $deck = &GetDeck($otherPlayer);
       $deckClass = new Deck($otherPlayer);
       for ($i = count($deck) - 1; $i >= 0; $i -= DeckPieces()) {
-        if ($deck[$i] == $destroyedID) {
+        if (CardName($deck[$i]) == $destroyedCardName) {
           $deckClass->Remove($i);
           AddGraveyard($destroyedID, $otherPlayer, "DECK");
         }
@@ -629,8 +630,7 @@ function SpecificCardLogic($player, $parameter, $lastResult)
       AddDecisionQueue("MZOP", $player, DealDamageBuilder($damage,$player,isUnitEffect:1), 1);
       return $lastResult;
     case "LIGHTSPEEDASSAULT":
-      $controller = MZPlayerID($player, $lastResult);
-      $ally = new Ally($lastResult, $otherPlayer);
+      $ally = new Ally($lastResult);
       $currentPower = $ally->CurrentPower();
       $ally->Destroy();
       AddDecisionQueue("MULTIZONEINDICES", $player, "THEIRALLY:arena=Space");
@@ -639,13 +639,12 @@ function SpecificCardLogic($player, $parameter, $lastResult)
       AddDecisionQueue("SETDQVAR", $player, 0, 1);
       AddDecisionQueue("SPECIFICCARD", $player, "LIGHTSPEEDASSAULT2", 1);
       AddDecisionQueue("PASSPARAMETER", $player, "{0}", 1);
-      AddDecisionQueue("MZOP", $player, "DEALDAMAGE," . $currentPower, 1);
+      AddDecisionQueue("MZOP", $player, DealDamageBuilder($currentPower, $player), 1);
       return $lastResult;
     case "LIGHTSPEEDASSAULT2":
-      $controller = MZPlayerID($player, $lastResult);
-      $ally = new Ally($lastResult, $controller);
+      $ally = new Ally($lastResult);
       $power = $ally->CurrentPower();
-      IndirectDamage("8606123385", ($player == 1 ? 2 : 1), $power, false);
+      IndirectDamage("8606123385", $ally->Controller(), $power, false);
       return $lastResult;
     case "ALLWINGSREPORTIN":
       foreach ($lastResult as $index) {
@@ -1112,6 +1111,7 @@ function SpecificCardLogic($player, $parameter, $lastResult)
       for($i=0; $i<count($lastResult); ++$i) {
         $ally = new Ally("MYALLY-" . $lastResult[$i], $player);
         AddRoundEffect("c1700fc85b", $player, "c1700fc85b", $ally->UniqueID());
+        WriteLog(CardLink($ally->CardID(), $ally->CardID()) . " loses all abilities for this round.");
       }
       break;
     case "FOCUS_FIRE":
