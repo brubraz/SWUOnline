@@ -3635,10 +3635,13 @@ function LukePilotPlotArmor($player, $turnsInPlay) {
 }
 
 function TheAnnihilatorJTL($player) {
+  $otherPlayer = $player == 1 ? 2 : 1;
   AddDecisionQueue("MULTIZONEINDICES", $player, "THEIRALLY");
   AddDecisionQueue("SETDQCONTEXT", $player, "Choose a unit to destroy");
   AddDecisionQueue("CHOOSEMULTIZONE", $player, "<-", 1);
   AddDecisionQueue("MZOP", $player, "DESTROY,$player", 1);
+  AddDecisionQueue("LOOKHAND", $player, "-", 1);
+  AddDecisionQueue("REVEALHANDCARDS", $otherPlayer, "-", 1);
   AddDecisionQueue("SPECIFICCARD", $player, "THEANNIHILATOR", 1);
 }
 
@@ -3666,9 +3669,9 @@ function C3POSOR($player) {
 }
 
 function WolffeSOR($player) {
-  AddDecisionQueue("SETDQCONTEXT", $player, "Choose a number");
-  AddDecisionQueue("BUTTONINPUTNOPASS", $player, "0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20");
-  AddDecisionQueue("SPECIFICCARD", $player, "WOLFFE", 1);
+  $otherPlayer = $player == 1 ? 2 : 1;
+  AddCurrentTurnEffect("7533529264", $player);
+  AddCurrentTurnEffect("7533529264", $otherPlayer);
 }
 
 function CovetousRivalsSHD($player) {
