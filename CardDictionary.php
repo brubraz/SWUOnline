@@ -1031,6 +1031,8 @@ function AbilityCost($cardID)
       return $abilityName == "Draw Card" ? 1 : 0;
     case "4300219753"://Fett's Firespray
       return $abilityName == "Exhaust" ? 2 : 0;
+    case "7144880397"://Ahsoka Tano TWI
+      return $abilityName == "Return" ? 2 : 0;
     case "5784497124"://Emperor Palpatine
       return $abilityName == "Deal Damage" ? 1 : 0;
     case "6088773439"://Darth Vader
@@ -1384,6 +1386,8 @@ function CheckTWIAbilityTypes($cardID) {
       return LeaderAbilitiesIgnored() ? "" : "A";
     case "8777351722"://Anakin Skywalker
       return LeaderAbilitiesIgnored() ? "" : "A";
+    case "7144880397"://Ahsoka Tano TWI
+      return "A,AA";
     case "5630404651"://MagnaGuard Wing Leader
       return "A,AA";
     case "0595607848"://Disaffected Senator
@@ -1667,6 +1671,10 @@ function CheckTWIAbilityNames($cardID, $index, $validate) {
   global $currentPlayer;
 
   switch($cardID) {
+    case "7144880397"://Ahsoka Tano TWI
+      $ally = new Ally("MYALLY-" . $index, $currentPlayer);
+      if($validate) return $ally->IsExhausted() ? "Return" : "Return,Attack";
+      else return "Return,Attack";
     case "2870878795"://Padme Amidala
       return LeaderAbilitiesIgnored() ? "" : "Draw";
     case "2872203891"://General Grievious

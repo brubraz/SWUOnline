@@ -646,6 +646,7 @@ function AllyPlayableExhausted(Ally $ally) {
       return SearchCount(SearchAlliesForTitle($ally->Controller(), "The Ghost")) > 0
         && NumResourcesAvailable($ally->Controller()) >= 1;
     case "4300219753"://Fett's Firespray
+    case "7144880397"://Ahsoka Tano TWI
     case "2471223947"://Frontline Shuttle
     case "1885628519"://Crosshair
     case "2b13cefced"://Fennec Shand Leader Unit
@@ -703,6 +704,8 @@ function AllyDoesAbilityExhaust($cardID) {
       return $abilityName != "Droid Attack";
     case "4300219753"://Fett's Firespray
       return $abilityName != "Exhaust";
+    case "7144880397"://Ahsoka Tano TWI
+      return $abilityName != "Return";
     case "2471223947"://Frontline Shuttle
       return $abilityName != "Shuttle";
     case "1885628519"://Crosshair

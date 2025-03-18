@@ -3668,6 +3668,19 @@ function PlayAbility($cardID, $from, $resourcesPaid, $target = "-", $additionalC
         AddDecisionQueue("MZOP", $currentPlayer, "DEALDAMAGE,1,$currentPlayer,1", 1);
       }
       break;
+    case "7144880397"://Ahsoka Tano TWI
+      $abilityName = GetResolvedAbilityName($cardID, $from);
+      if ($from == "PLAY" && $abilityName == "Return" && $playAlly->Exists()) {
+        $upgrades = $playAlly->GetUpgrades(true);
+        for($i=0; $i<count($upgrades); $i+=SubcardPieces()) {
+          $playAlly->RemoveSubcard($upgrades[$i], skipDestroy:true);
+          if (!IsToken($upgrades[$i]) && !CardIDIsLeader($upgrades[$i])) {
+            AddHand($upgrades[$i+1], $upgrades[$i]);
+          }
+        }
+        MZBounce($currentPlayer, $playAlly->MZIndex());
+      }
+      break;
     case "4300219753"://Fett's Firespray
       if($from != "PLAY") {
         $ready = false;
