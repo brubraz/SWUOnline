@@ -1243,7 +1243,7 @@ function AdmiralHoldoWereNotAlone($player, $flipped) {
   $myAllies = GetAllies($player);
   $theirAllies = GetAllies($otherPlayer);
   for($i=0; $i<count($myAllies); $i+=AllyPieces()) {
-    if(AllyTraitContainsOrUpgradeTraitContains($myAllies[$i+5], "Resistance")) {
+    if(AllyTraitContainsOrUpgradeTraitContains($myAllies[$i+5], "Resistance") && $myAllies[$i] != "ccf9474416") {
       $indices[] = "MYALLY-" . $i;
     }
   }
