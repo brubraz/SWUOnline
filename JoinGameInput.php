@@ -55,15 +55,25 @@ include "CardDictionary.php";
 include "MenuFiles/ParseGamefile.php";
 include "MenuFiles/WriteGamefile.php";
 if($playerID == 2 && isset($_SESSION["userid"])) {
-  $isBlocked = false;
-  $blockedPlayers = LoadBlockedPlayers($_SESSION["userid"]);
-  for($i=0; $i<count($blockedPlayers); ++$i) {
-    if($blockedPlayers[$i] == $p1id) {
-      $isBlocked = true;
+  $iBlockedThem = false;
+  $theyBlockedMe = false;
+
+  $myBlockedPlayers = LoadBlockedPlayers($_SESSION["userid"]);
+  for($i=0; $i<count($myBlockedPlayers); ++$i) {
+    if($myBlockedPlayers[$i] == $p1id) {
+      $iBlockedThem = true;
       break;
     }
   }
-  if ($isBlocked) {
+  $theirBlockedPlayers = LoadBlockedPlayers($p1id);
+  for($i=0; $i<count($theirBlockedPlayers); ++$i) {
+    if($theirBlockedPlayers[$i] == $_SESSION["userid"]) {
+      $theyBlockedMe = true;
+      break;
+    }
+  }
+
+  if ($iBlockedThem || $theyBlockedMe) {
     $_SESSION['error'] = '⚠️ Another player has already joined the game.';
     header("Location: MainMenu.php");
     die();
