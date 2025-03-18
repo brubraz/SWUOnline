@@ -844,14 +844,14 @@ if ($lastUpdate != 0 && $cacheVal <= $lastUpdate) {
 
   $mzMultiDamage = false;
   $mzMultiHeal = false;
-  $canOverkillUnits = false;
+  $isDamagePreventable = false;
   $counterLimitReached = false;
   $mzMultiAllies = [];
   $mzMultiCharacters = [];
   if (($turn[0] == "INDIRECTDAMAGEMULTIZONE" || $turn[0] == "MULTIDAMAGEMULTIZONE" || $turn[0] == "MAYMULTIDAMAGEMULTIZONE" || $turn[0] == "PARTIALMULTIDAMAGEMULTIZONE" || $turn[0] == "PARTIALMULTIHEALMULTIZONE" || $turn[0] == "MAYMULTIHEALMULTIZONE" || $turn[0] == "MULTIHEALMULTIZONE")) {
     $mzMultiDamage = str_contains($turn[0], "DAMAGE");
     $mzMultiHeal = str_contains($turn[0], "HEAL");
-    $canOverkillUnits = $mzMultiDamage && $turn[0] != "INDIRECTDAMAGEMULTIZONE";
+    $isDamagePreventable = $mzMultiDamage && $turn[0] != "INDIRECTDAMAGEMULTIZONE";
     $parsedParams = ParseDQParameter($turn[0], $turn[1], $turn[2]);
     $counterLimit = $parsedParams["counterLimit"];
     $mzMultiAllies = $parsedParams["allies"];
@@ -1308,7 +1308,7 @@ if ($lastUpdate != 0 && $cacheVal <= $lastUpdate) {
           $counters = $ally->Counters();
           $counterType = $mzMultiDamage ? 1 : 2;
           if ($mzMultiDamage) {
-            $counterLimit = ($ally->HasShield() || $canOverkillUnits) ? 0 : $ally->Health();
+            $counterLimit = $isDamagePreventable ? 0 : $ally->Health();
           }
         }
       }
@@ -1497,7 +1497,7 @@ if ($lastUpdate != 0 && $cacheVal <= $lastUpdate) {
           $counters = $ally->Counters();
           $counterType = $mzMultiDamage ? 1 : 2;
           if ($mzMultiDamage) {
-            $counterLimit = ($ally->HasShield() || $canOverkillUnits) ? 0 : $ally->Health();
+            $counterLimit = $isDamagePreventable ? 0 : $ally->Health();
           }
         }
       } else {
