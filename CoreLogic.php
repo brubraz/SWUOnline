@@ -3569,9 +3569,10 @@ function PlayAbility($cardID, $from, $resourcesPaid, $target = "-", $additionalC
       AddDecisionQueue("SPECIFICCARD", $currentPlayer, "SWEEPTHEAREA", 1);
       break;
     case "2579248092"://Covering the Wing
-      CreateXWing($currentPlayer);
+      $xWingUniqueId = CreateXWing($currentPlayer);
       AddDecisionQueue("MULTIZONEINDICES", $currentPlayer, "MYALLY&THEIRALLY");
-      AddDecisionQueue("SETDQCONTEXT", $currentPlayer, "Choose a unit to give a shield");
+      AddDecisionQueue("MZFILTER", $currentPlayer, "uniqueID=" . $xWingUniqueId, 1);
+      AddDecisionQueue("SETDQCONTEXT", $currentPlayer, "Choose a unit to give a shield", 1);
       AddDecisionQueue("MAYCHOOSEMULTIZONE", $currentPlayer, "<-", 1);
       AddDecisionQueue("MZOP", $currentPlayer, "ADDSHIELD", 1);
       break;
