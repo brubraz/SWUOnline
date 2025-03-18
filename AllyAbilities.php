@@ -3636,12 +3636,16 @@ function LukePilotPlotArmor($player, $turnsInPlay) {
 
 function TheAnnihilatorJTL($player) {
   $otherPlayer = $player == 1 ? 2 : 1;
+  AddDecisionQueue("PASSPARAMETER", $player, "PASS");
+  AddDecisionQueue("SETDQVAR", $player, "0");
   AddDecisionQueue("MULTIZONEINDICES", $player, "THEIRALLY");
   AddDecisionQueue("SETDQCONTEXT", $player, "Choose a unit to destroy");
   AddDecisionQueue("CHOOSEMULTIZONE", $player, "<-", 1);
   AddDecisionQueue("MZOP", $player, "DESTROY,$player", 1);
+  AddDecisionQueue("SETDQVAR", $player, "0", 1);
   AddDecisionQueue("LOOKHAND", $player, "-", 1);
   AddDecisionQueue("REVEALHANDCARDS", $otherPlayer, "-", 1);
+  AddDecisionQueue("PASSPARAMETER", $player, "{0}"); // Workaround for the fact "LOOKHAND" always returns PASS
   AddDecisionQueue("SPECIFICCARD", $player, "THEANNIHILATOR", 1);
 }
 

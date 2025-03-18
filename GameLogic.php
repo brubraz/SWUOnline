@@ -1374,8 +1374,8 @@ function DecisionQueueStaticEffect($phase, $player, $parameter, $lastResult)
         if($cards != "") $cards .= ",";
         $cards .= $hand[$i];
       }
-      $revealed = RevealCards($cards, $player);
-      return ($revealed ? $cards : "PASS");
+      RevealCards($cards, $player);
+      return $lastResult;
     case "WRITELOG":
       WriteLog(implode(" ", explode("_", $parameter)));
       return $lastResult;
