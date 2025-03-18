@@ -1738,7 +1738,6 @@ function AllyHasWhenPlayCardAbility($playedCardID, $playedCardUniqueID, $from, $
       case "0961039929"://Colonel Yularen
         return AspectContains($playedCardID, "Command") && DefinedTypesContains($playedCardID, "Unit");
       case "5907868016"://Fighters for Freedom
-        WriteLog($playedCardID);
         return !$thisIsNewlyPlayedAlly && AspectContains($playedCardID, "Aggression");
       case "3010720738"://Tobias Beckett
         return !DefinedTypesContains($playedCardID, "Unit") && $thisAlly->NumUses() > 0;
