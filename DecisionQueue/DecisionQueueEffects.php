@@ -589,19 +589,22 @@ function SpecificCardLogic($player, $parameter, $lastResult)
     case "THEANNIHILATOR":
       $otherPlayer = $player == 1 ? 2 : 1;
       $destroyedID = $lastResult;
-      $destroyedCardName = CardName($destroyedID);
+      $destroyedCardTitle = CardTitle($destroyedID);
       $hand = &GetHand($otherPlayer);
       for($i = count($hand) - 1; $i >= 0; $i -= HandPieces()) {
-        if(CardName($hand[$i]) == $destroyedCardName) {
+        if(CardTitle($hand[$i]) == $destroyedCardTitle) {
+          WriteLog(CardLink($hand[$i], $hand[$i]) . " was discarded from hand.");
           DiscardCard($otherPlayer, $i);
         }
       }
       $deck = &GetDeck($otherPlayer);
       $deckClass = new Deck($otherPlayer);
       for ($i = count($deck) - 1; $i >= 0; $i -= DeckPieces()) {
-        if (CardName($deck[$i]) == $destroyedCardName) {
+        $cardTitle = CardTitle($deck[$i]);
+        if ($cardTitle == $destroyedCardTitle) {
+          WriteLog(CardLink($deck[$i], $deck[$i]) . " was discarded from deck.");
+          AddGraveyard($deck[$i], $otherPlayer, "DECK");
           $deckClass->Remove($i);
-          AddGraveyard($destroyedID, $otherPlayer, "DECK");
         }
       }
       break;
