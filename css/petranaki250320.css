@@ -289,10 +289,17 @@ select {
   border-radius: 50px;
 }
 
+.nav-bar-links {
+  position: absolute;
+  right: 0;
+  margin: 0.67rem 0;
+  width: fit-content;
+}
+
 .nav-bar-karabast {
   width: fit-content;
   right: 0;
-  margin-top: 16px;
+  margin-top: 4rem;
   position: absolute;
   font-size: 16px;
   font-weight: 500;
