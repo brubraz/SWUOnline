@@ -1224,7 +1224,14 @@ function FindLeaderInPlay($player) {
   $units = &GetAllies($player);
   for($i=0; $i<count($units); $i+=AllyPieces()) {
     if(CardIDIsLeader($units[$i], $player)) return LeaderUndeployed($units[$i]);
+    else if($units[$i + 4] != "-") {
+      $subcards = explode(",", $units[$i + 4]);
+      for($j=0; $j<count($subcards); $j+=SubCardPieces()) {
+        if(CardIDIsLeader($subcards[$j], $player)) return LeaderUndeployed($subcards[$j]);
+      }
+    }
   }
+
   return -1;
 }
 
