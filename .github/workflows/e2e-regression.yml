@@ -10,6 +10,8 @@ jobs:
   e2e-regression:
     runs-on: ubuntu-latest
 
+    timeout-minutes: 45
+
     services:
       docker:
         image: docker:20.10.7
