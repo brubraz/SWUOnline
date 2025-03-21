@@ -17,7 +17,7 @@ if ($useruid != "OotTheMonk" && $useruid != "love" && $useruid != "ninin" && $us
 }
 
 $banfileHandler = fopen("./HostFiles/bannedPlayers.txt", "r");
-echo <<<HTML
+?>
 <script>
 function BannedPlayersExpandCollapse() {
   var x = document.getElementsByClassName("banned-players-list")[0];
@@ -28,20 +28,20 @@ function BannedPlayersExpandCollapse() {
   }
 }
 </script>
-<div style='padding:10px; width:80vw; height: 70vh; margin: 20vh auto;
+<div style='padding:10px; width:80vw; max-width: 640px; height: 70vh; margin: 20vh auto;
   background-color:rgba(74, 74, 74, 0.9); border: 2px solid #1a1a1a; border-radius: 5px; overflow-y: scroll;'>
 <h2>Banned players:</h2>
-<button onclick="BannedPlayersExpandCollapse()" style="font-size: 1rem; padding: 8px; margin-top: 8px;">Expand/Collapse</button>
+<button onclick="BannedPlayersExpandCollapse()" style="font-size: 1rem; padding: 8px; margin: 8px;">Expand/Collapse</button>
 <div class='banned-players-list' style='display:none;'>
-HTML;
+<?php
 while (!feof($banfileHandler)) {
   $bannedPlayer = fgets($banfileHandler);
   echo ($bannedPlayer . "<BR>");
 }
 fclose($banfileHandler);
-echo ("</div>");
-echo ("<br><br><form  action='./BanPlayer.php'>");
 ?>
+</div>
+<form  action='./BanPlayer.php'>
 <label for="playerToBan" style='font-weight:bolder; margin-left:10px;'>Player to ban:</label>
 <input type="text" id="playerToBan" name="playerToBan" value="">
 <input type="submit" value="Ban">
@@ -65,14 +65,17 @@ if (!mysqli_stmt_prepare($stmt, $sql)) {
 //mysqli_stmt_bind_param($stmt, "ss", $username, $email);
 mysqli_stmt_execute($stmt);
 // "Get result" returns the results from a prepared statement
-echo ("<H2>Most recently created accounts:</h2>");
+?>
+<h2>Most recently created accounts:</h2>
+<?php
 $userData = mysqli_stmt_get_result($stmt);
 while ($row = mysqli_fetch_array($userData, MYSQLI_NUM)) {
   echo ($row[0] . "<BR>");
 }
 mysqli_close($conn);
-
-echo ("<hr><h2>Banned IPs:</h2>");
+?>
+<hr><h2>Banned IPs:</h2>
+<?php
 $banfileHandler = fopen("./HostFiles/bannedIPs.txt", "r");
 while (!feof($banfileHandler)) {
   $bannedIP = fgets($banfileHandler);
