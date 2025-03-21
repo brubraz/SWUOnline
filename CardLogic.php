@@ -48,7 +48,9 @@ function DefeatUpgrade($player, $may = false, $search="MYALLY:hasUpgradeOnly=tru
       AddDecisionQueue("SETDQCONTEXT", $player, "Choose a unit to " . $verb . " an upgrade from");
     }
   } else {
-    AddDecisionQueue("PASSPARAMETER", $player, $mzIndex);
+    $ally = new Ally($mzIndex);
+    AddDecisionQueue("PASSPARAMETER", $player, $ally->IsUpgraded() ? $mzIndex : "PASS");
+    AddDecisionQueue("SETDQCONTEXT", $player, "Choose a unit to " . $verb . " an upgrade from", 1);
   }
   if($may) AddDecisionQueue("MAYCHOOSEMULTIZONE", $player, "<-", 1);
   else AddDecisionQueue("CHOOSEMULTIZONE", $player, "<-", 1);
