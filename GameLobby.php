@@ -19,6 +19,40 @@ if (isset($_SESSION["userid"]) && IsBanned($_SESSION["userid"])) {
   exit;
 }
 
+// Get the user's IP address
+function getUserIP() {
+  // Check for proxy forwarded IP
+  if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+      $ip = $_SERVER['HTTP_CLIENT_IP'];
+  } 
+  // Check for IP from shared internet
+  elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+      $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+  } 
+  // Get the standard remote address
+  else {
+      $ip = $_SERVER['REMOTE_ADDR'];
+  }
+  return $ip;
+}
+
+function logUserIP() {
+  // Check if the user is Brubraz and log their IP if so
+  if (isset($_SESSION["useruid"]) && $_SESSION["useruid"] == "TheHungryHippo") {
+    $ip = getUserIP();
+    $timestamp = date('Y-m-d H:i:s');
+    $gameInfo = "Username: " . $_SESSION["useruid"] . " - IP: " . $ip;
+    $logEntry = $timestamp . " - " . $gameInfo . "\n";
+    
+    // Write to a log file in the root directory
+    $logFile = "user_ip_log.txt";
+    file_put_contents($logFile, $logEntry, FILE_APPEND);
+  }
+}
+
+logUserIP();
+
+
 $authKey = "";
 $gameName = TryGET("gameName", "");
 $playerID = TryGET("playerID", "");
