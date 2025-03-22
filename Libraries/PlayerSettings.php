@@ -274,6 +274,8 @@ function GetCardBack($player)
       return "PrairiePirates";
     case 37:
       return "CCC";
+    case 38:
+      return "stubbs-hub";
     default:
       return "CardBack";
   }
