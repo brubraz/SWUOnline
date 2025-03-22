@@ -65,7 +65,7 @@ function PatreonLogin($access_token, $silent=true, $debugMode=false)
 
   if(!$silent)
   {
-    echo("<h2 style='margin: 8px 0 16px 0;'>Your patronages:</h2>");
+    echo("<h2 style='margin: 8px 0 16px 0;'>Your Patronages</h2>");
     echo("<ul style='display: block; margin-bottom: 24px; list-style-type: disc; list-style-position: inside;'>");
     for($i=0; $i<count($yourPatronages); ++$i)
     {
@@ -73,7 +73,7 @@ function PatreonLogin($access_token, $silent=true, $debugMode=false)
     }
     echo("</ul>");
     echo("<h4 style='margin-bottom: 8px;'>Not seeing something you expect to see?</h4>");
-    echo("<h4 style='margin-bottom: 8px;'>1. Check your patreon page to make sure it's listed in your currently supported campaigns</h4>");
+    echo("<h4 style='margin-bottom: 4px;'>1. Check your patreon page to make sure it's listed in your currently supported campaigns</h4>");
     echo("<h4 style='margin-bottom: 24px;'>2. Reach out on our discord server!</h4>");
   }
   return $output;
