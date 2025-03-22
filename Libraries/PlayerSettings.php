@@ -263,7 +263,7 @@ function GetCardBack($player)
     case 31:
       return "galactic-shuffle";
     case 32:
-      return "tropa-do-boba";
+      return "tropa-do-boba-2";
     case 33:
       return "CB_OuterRimCCG";
     case 34:
@@ -276,6 +276,10 @@ function GetCardBack($player)
       return "CCC";
     case 38:
       return "stubbs-hub";
+    case 39:
+      return "The Nordic Takedown";
+    case 40:
+      return "Sekrit";
     default:
       return "CardBack";
   }
@@ -507,6 +511,8 @@ function GetSettingsUI($player)
   $rv .= CreateSelectOption($SET_Cardback . "-" . 35, "Enigma", $SET_Cardback . "-" . $settings[$SET_Cardback]);
   $rv .= CreateSelectOption($SET_Cardback . "-" . 36, "PrairiePirates", $SET_Cardback . "-" . $settings[$SET_Cardback]);
   $rv .= CreateSelectOption($SET_Cardback . "-" . 37, "Colorado Cantina Crew", $SET_Cardback . "-" . $settings[$SET_Cardback]);
+  $rv .= CreateSelectOption($SET_Cardback . "-" . 39, "The Nordic Takedown", $SET_Cardback . "-" . $settings[$SET_Cardback]);
+  $rv .= CreateSelectOption($SET_Cardback . "-" . 40, "Sekrit", $SET_Cardback . "-" . $settings[$SET_Cardback]);
   $rv .= "</select>";
   $rv .= "<BR>";
 

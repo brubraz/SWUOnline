@@ -151,6 +151,14 @@ $cardBack = new stdClass();
 $cardBack->name = "Colorado Cantina Crew";
 $cardBack->id = 37;
 $response->cardBacks[] = $cardBack;
+$cardBack = new stdClass();
+$cardBack->name = "The Nordic Takedown";
+$cardBack->id = 39;
+$response->cardBacks[] = $cardBack;
+$cardBack = new stdClass();
+$cardBack->name = "Sekrit";
+$cardBack->id = 40;
+$response->cardBacks[] = $cardBack;
 
 $response->playmats = [];
 if(IsUserLoggedIn()) {
