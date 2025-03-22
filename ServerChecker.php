@@ -131,6 +131,11 @@ if ($handle = opendir($path)) {
 
     if ($status == 0 && $visibility == "public" && intval(GetCachePiece($gameName, 11)) < 3) {
       $p1Hero = GetCachePiece($gameName, 7);
+      $retryP1Hero = 0;
+      while($retryP1Hero < 10 && $p1Hero == "") {
+        $retryP1Hero++;
+        $p1Hero = GetCachePiece($gameName, 7);
+      }
       $p1Base = GetCachePiece($gameName, 20);
       $formatName = FormatDisplayName($format);
 
