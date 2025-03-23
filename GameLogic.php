@@ -700,6 +700,33 @@ function DecisionQueueStaticEffect($phase, $player, $parameter, $lastResult)
           }
 
           return implode(",", $damagedTargets);
+        case "ASSIGNINDIRECTDAMAGE":
+          // Important: use MZOpHelpers.php AssignIndirectDamageBuilder() function for param structure
+          $targetPlayer = $lastResult;
+          $sourceCardID = $parameterArr[1];
+          $sourcePlayer = $parameterArr[2];
+          $amount = $parameterArr[3];
+          $fromUnitEffect = $parameterArr[4];
+          $sourceModifierCardID = $parameterArr[5];
+
+          if ($sourcePlayer != $targetPlayer && $sourceModifierCardID != "") {
+            PrependDecisionQueue("MZOP", $sourcePlayer, DealMultiDamageBuilder($sourcePlayer, isUnitEffect:$fromUnitEffect, isPreventable:false));
+            PrependDecisionQueue("INDIRECTDAMAGEMULTIZONE", $sourcePlayer, "<-");
+            PrependDecisionQueue("SETDQCONTEXT", $sourcePlayer, "Assign " . $amount . " unpreventable damage among their base and units");
+            PrependDecisionQueue("PREPENDLASTRESULT", $sourcePlayer, $amount . "-THEIRCHAR-0,");
+            PrependDecisionQueue("MULTIZONEINDICES", $sourcePlayer, "THEIRALLY");
+            PrependDecisionQueue("OK", $targetPlayer, CardLink($sourceCardID, $sourceCardID) . " deals " . $amount . " indirect damage to you, and your opponent will assign the indirect damage due to the " . CardLink($sourceModifierCardID, $sourceModifierCardID) . ".");
+          } else {
+            PrependDecisionQueue("MZOP", $targetPlayer, DealMultiDamageBuilder($sourcePlayer, isUnitEffect:$fromUnitEffect, isPreventable:false));
+            PrependDecisionQueue("SETDQCONTEXT", $targetPlayer, "Assign " . $amount . " unpreventable damage among your base and units");
+            PrependDecisionQueue("INDIRECTDAMAGEMULTIZONE", $targetPlayer, "<-");
+            PrependDecisionQueue("PREPENDLASTRESULT", $targetPlayer, $amount . "-MYCHAR-0,");
+            PrependDecisionQueue("MULTIZONEINDICES", $targetPlayer, "MYALLY");
+            PrependDecisionQueue("OK", $targetPlayer, CardLink($sourceCardID, $sourceCardID) . " deals " . $amount . " indirect damage to you.");
+          }
+          PrependDecisionQueue("SETDQCONTEXT", $targetPlayer, "Indirect Damage");
+          
+          return $lastResult;
         case "DEALDAMAGE":
           // Important: use MZOpHelpers.php DamageStringBuilder() function for param structure
           if($lastResult == "") return "";
@@ -1483,6 +1510,10 @@ function DecisionQueueStaticEffect($phase, $player, $parameter, $lastResult)
     case "YESPASS":
       if($lastResult == "YES") return "PASS";
       return 1;
+    case "CHOICETOPLAYERID":
+      if ($lastResult == "Yourself") return $player;
+      else if ($lastResult == "Opponent") return $player == 1 ? 2 : 1;
+      return "PASS";
     case "NOTSHARETRAITPASS":
       $mzArr = explode("-", $lastResult);
       if(str_starts_with($mzArr[0], "THEIR")) $zone = &GetMZZone($player == 1 ? 2 : 1, $mzArr[0]);

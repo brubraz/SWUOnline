@@ -47,4 +47,27 @@ function MultiDistributeDamageStringBuilder($totalDamage, $sourcePlayer, $isUnit
   $isPreventable = $isPreventable ? 1 : 0;
   return "$totalDamage,$isUnitEffect,$maxDamagePerTarget,$sourcePlayer,$isPreventable,$zones";
 }
+
+/**
+ * Builds a string for assigning indirect damage
+ * 
+ * Parameter structure:
+ * 0 - ASSIGNINDIRECTDAMAGE
+ * 1 - Card ID
+ * 2 - Source player
+ * 3 - Amount of damage
+ * 4 - From unit effect (1 = yes, 0 = no)
+ * 5 - Source modifier card ID
+ * 
+ * @param string $cardID The ID of the card that caused the indirect damage
+ * @param int $sourcePlayer The player causing the indirect damage
+ * @param int $amount The amount of damage to assign
+ * @param int $fromUnitEffect Whether the damage is caused by unit effects (1 = yes, 0 = no)
+ * @param string $sourceModifierCardID The ID of the card that caused the indirect damage
+ * @return string The formatted indirect damage string for the decision queue
+ */
+function AssignIndirectDamageBuilder($cardID, $sourcePlayer, $amount, $fromUnitEffect = 0, $sourceModifierCardID = "") {
+  $fromUnitEffect = $fromUnitEffect ? 1 : 0;
+  return "ASSIGNINDIRECTDAMAGE,$cardID,$sourcePlayer,$amount,$fromUnitEffect,$sourceModifierCardID";
+}
 ?>
