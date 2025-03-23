@@ -1447,12 +1447,11 @@ function CheckThrawnJTL($player, $serializedAllyDestroyData, $target) {
   }
 }
 
-function IndirectDamage($cardID, $player, $amount, $fromUnitEffect=false, $uniqueID="")
+function IndirectDamage($cardID, $sourcePlayer, $amount, $fromUnitEffect=false, $uniqueID="", $targetPlayer="")
 {
   global $CS_NumIndirectDamageGiven;
   $sourcePlayerTargets = false;
   $sourceModifierCardID = "";
-  $sourcePlayer = $player == 1 ? 2 : 1;
   $amount += SearchCount(SearchAlliesForCard($sourcePlayer, "4560739921"));//Hunting Aggressor
   if(SearchCount(SearchAlliesForCard($sourcePlayer, "1330473789")) > 0) {//Devastator JTL
     $sourcePlayerTargets = true;
@@ -1475,22 +1474,14 @@ function IndirectDamage($cardID, $player, $amount, $fromUnitEffect=false, $uniqu
     }
   }
 
-  AddDecisionQueue("SETDQCONTEXT", $player, "Indirect Damage");
-  if ($sourcePlayerTargets) {
-    AddDecisionQueue("OK", $player, CardLink($cardID, $cardID) . " deals " . $amount . " indirect damage to you, and your opponent will assign the indirect damage due to the " . CardLink($sourceModifierCardID, $sourceModifierCardID) . ".");
-    AddDecisionQueue("MULTIZONEINDICES", $sourcePlayer, "THEIRALLY");
-    AddDecisionQueue("PREPENDLASTRESULT", $sourcePlayer, $amount . "-THEIRCHAR-0,");
-    AddDecisionQueue("SETDQCONTEXT", $sourcePlayer, "Assign " . $amount . " unpreventable damage among their base and units");
-    AddDecisionQueue("INDIRECTDAMAGEMULTIZONE", $sourcePlayer, "<-");
-    AddDecisionQueue("MZOP", $sourcePlayer, DealMultiDamageBuilder($sourcePlayer, isUnitEffect:$fromUnitEffect, isPreventable:false));  
+  if ($targetPlayer == "") {
+    AddDecisionQueue("SETDQCONTEXT", $sourcePlayer, "Choose player to receive " . $amount . " indirect damage");
+    AddDecisionQueue("BUTTONINPUTNOPASS", $sourcePlayer, "Yourself,Opponent");
+    AddDecisionQueue("CHOICETOPLAYERID", $sourcePlayer, "-");
   } else {
-    AddDecisionQueue("OK", $player, CardLink($cardID, $cardID) . " deals " . $amount . " indirect damage to you.");
-    AddDecisionQueue("MULTIZONEINDICES", $player, "MYALLY");
-    AddDecisionQueue("PREPENDLASTRESULT", $player, $amount . "-MYCHAR-0,");
-    AddDecisionQueue("SETDQCONTEXT", $player, "Assign " . $amount . " unpreventable damage among your base and units");
-    AddDecisionQueue("INDIRECTDAMAGEMULTIZONE", $player, "<-");
-    AddDecisionQueue("MZOP", $player, DealMultiDamageBuilder($sourcePlayer, isUnitEffect:$fromUnitEffect, isPreventable:false));  
+    AddDecisionQueue("PASSPARAMETER", $sourcePlayer, $targetPlayer);
   }
+  AddDecisionQueue("MZOP", $sourcePlayer, AssignIndirectDamageBuilder($cardID, $sourcePlayer, $amount, $fromUnitEffect, $sourceModifierCardID));
 }
 
 function CardCostIsOdd($cardID) {

@@ -584,7 +584,7 @@ function SpecificCardLogic($player, $parameter, $lastResult)
     case "SUPERHEAVYIONCANNON":
       $controller = MZPlayerID($player, $lastResult);
       $ally = new Ally($lastResult, $controller);
-      IndirectDamage("5016817239", $controller, $ally->CurrentPower(), true);
+      IndirectDamage("5016817239", $player, $ally->CurrentPower(), true, targetPlayer:$ally->Controller());
       break;
     case "THEANNIHILATOR":
       $otherPlayer = $player == 1 ? 2 : 1;
@@ -647,7 +647,7 @@ function SpecificCardLogic($player, $parameter, $lastResult)
     case "LIGHTSPEEDASSAULT2":
       $ally = new Ally($lastResult);
       $power = $ally->CurrentPower();
-      IndirectDamage("8606123385", $ally->Controller(), $power, false);
+      IndirectDamage("8606123385", $player, $power, false, targetPlayer:$ally->Controller());
       return $lastResult;
     case "ALLWINGSREPORTIN":
       foreach ($lastResult as $index) {
@@ -999,7 +999,7 @@ function SpecificCardLogic($player, $parameter, $lastResult)
       }
       break;
     case "BOBA_FETT_LEADER_JTL":
-      IndirectDamage("9831674351", $otherPlayer, 1);
+      IndirectDamage("9831674351", $player, 1);
       break;
     case "HAN_SOLO_LEADER_JTL":
       $ally = new Ally($lastResult, $player);
