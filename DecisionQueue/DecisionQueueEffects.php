@@ -6,6 +6,23 @@ function ModalAbilities($player, $parameter, $lastResult)
   $paramArr = explode(",", $parameter);
   switch($paramArr[0])
   {
+    case "LUXBONTERI":
+      switch($lastResult) {
+        case 0: // Ready a unit
+          AddDecisionQueue("MULTIZONEINDICES", $player, "MYALLY&THEIRALLY");
+          AddDecisionQueue("SETDQCONTEXT", $player, "Choose a unit to ready");
+          AddDecisionQueue("MAYCHOOSEMULTIZONE", $player, "<-", 1);
+          AddDecisionQueue("MZOP", $player, "READY", 1);
+          break;
+        case 1: // Exhaust a unit
+          AddDecisionQueue("MULTIZONEINDICES", $player, "MYALLY&THEIRALLY");
+          AddDecisionQueue("SETDQCONTEXT", $player, "Choose a unit to exhaust");
+          AddDecisionQueue("MAYCHOOSEMULTIZONE", $player, "<-", 1);
+          AddDecisionQueue("MZOP", $player, "REST", 1);
+          break;
+        default: break;
+      }
+      return $lastResult;
     case "K2SO":
       $otherPlayer = ($player == 1 ? 2 : 1);
       switch($lastResult) {
@@ -974,11 +991,6 @@ function SpecificCardLogic($player, $parameter, $lastResult)
       break;
     case "LETHALCRACKDOWN":
       DealDamageAsync($player, CardPower($lastResult), "DAMAGE", "1389085256", sourcePlayer:$player);
-      break;
-    case "LUXBONTERI":
-      $ally = new Ally($lastResult, MZPlayerID($player, $lastResult));
-      if($ally->IsExhausted()) $ally->Ready();
-      else $ally->Exhaust();
       break;
     case "KASHYYYKDEFENDER":
       $args = explode("-", $lastResult);

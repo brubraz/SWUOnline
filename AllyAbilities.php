@@ -1943,10 +1943,11 @@ function AllyPlayCardAbility($player, $cardID, $uniqueID, $numUses, $playedCardI
         AddDecisionQueue("MZOP", $player, DealDamageBuilder($damage, $player, isUnitEffect:1), 1);
         break;
       case "0199085444"://Lux Bonteri
-        AddDecisionQueue("MULTIZONEINDICES", $player, "MYALLY&THEIRALLY");
-        AddDecisionQueue("SETDQCONTEXT", $player, "Choose a unit to ready or exhaust");
-        AddDecisionQueue("CHOOSEMULTIZONE", $player, "<-", 1);
-        AddDecisionQueue("SPECIFICCARD", $player, "LUXBONTERI", 1);
+        $options = "Ready a unit;Exhaust a unit";
+        AddDecisionQueue("SETDQCONTEXT", $player, "Choose one");
+        AddDecisionQueue("CHOOSEOPTION", $player, "$cardID&$options");
+        AddDecisionQueue("SHOWOPTIONS", $player, "$cardID&$options");
+        AddDecisionQueue("MODAL", $player, "LUXBONTERI");
         break;
       default: break;
     }
