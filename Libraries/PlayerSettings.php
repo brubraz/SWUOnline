@@ -277,9 +277,9 @@ function GetCardBack($player)
     case 38:
       return "stubbs-hub";
     case 39:
-      return "The Nordic Takedown";
+      return "nordic-takedown";
     case 40:
-      return "Sekrit";
+      return "sekrit";
     default:
       return "CardBack";
   }
