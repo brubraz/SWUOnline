@@ -159,6 +159,10 @@ $cardBack = new stdClass();
 $cardBack->name = "Sekrit";
 $cardBack->id = 40;
 $response->cardBacks[] = $cardBack;
+$cardBack = new stdClass();
+$cardBack->name = "C4";
+$cardBack->id = 41;
+$response->cardBacks[] = $cardBack;
 
 $response->playmats = [];
 if(IsUserLoggedIn()) {
