@@ -68,7 +68,7 @@ function WriteError($text)
   WriteLog("ERROR: " . $text);
 }
 
-function EchoLog($gameName, $playerID)
+function EchoLog($gameName, $playerID = 0)
 {
   $filename = LogPath($gameName);
   $filesize = filesize($filename);
