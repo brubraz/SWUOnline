@@ -1745,7 +1745,7 @@ function AllyHasWhenPlayCardAbility($playedCardID, $playedCardUniqueID, $from, $
       case "3010720738"://Tobias Beckett
         return !DefinedTypesContains($playedCardID, "Unit") && $thisAlly->NumUses() > 0;
       case "3f7f027abd"://Quinlan Vos Leader Unit
-        return DefinedTypesContains($playedCardID, "Unit");
+        return DefinedTypesContains($playedCardID, "Unit") && !PilotWasPlayed($currentPlayer, $playedCardID);
       case "0142631581"://Mas Amedda
       case "9610332938"://Poggle the Lesser
         return !$thisIsNewlyPlayedAlly && !$thisAlly->IsExhausted() && DefinedTypesContains($playedCardID, "Unit");
@@ -3234,7 +3234,10 @@ function SpecificAllyAttackAbilities($attackerUniqueID=0, $reportMode=false)
       global $CS_NumBountyHuntersPlayed;
       global $CS_NumPilotsPlayed;
       if(GetClassState($mainPlayer, $CS_NumPilotsPlayed) > 0 || GetClassState($mainPlayer, $CS_NumBountyHuntersPlayed) > 0) {
-        Draw($mainPlayer);
+        AddDecisionQueue("SETDQCONTEXT", $mainPlayer, "Do you want to draw a card?");
+        AddDecisionQueue("YESNO", $mainPlayer, "-");
+        AddDecisionQueue("NOPASS", $mainPlayer, "-");
+        AddDecisionQueue("DRAW", $mainPlayer, "-", 1);
       }
       break;
     case "9611596703"://Allegiant General Pryde
