@@ -1745,7 +1745,7 @@ function AllyHasWhenPlayCardAbility($playedCardID, $playedCardUniqueID, $from, $
       case "3010720738"://Tobias Beckett
         return !DefinedTypesContains($playedCardID, "Unit") && $thisAlly->NumUses() > 0;
       case "3f7f027abd"://Quinlan Vos Leader Unit
-        return DefinedTypesContains($playedCardID, "Unit");
+        return DefinedTypesContains($playedCardID, "Unit") && !PilotWasPlayed($currentPlayer, $playedCardID);
       case "0142631581"://Mas Amedda
       case "9610332938"://Poggle the Lesser
         return !$thisIsNewlyPlayedAlly && !$thisAlly->IsExhausted() && DefinedTypesContains($playedCardID, "Unit");
