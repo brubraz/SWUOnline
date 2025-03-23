@@ -86,8 +86,8 @@ class DeckValidation {
     return match($format) {
       Formats::$PadawanFormat => "Only Common cards are allowed, with the exception of Rare Leaders. No Rare Bases are allowed, and no Special rarity cards unless they have a Common variant.",
       Formats::$SandcrawlerFormat => "Only Uncommon and Common cards are allowed, with the exception of Leaders. No Rare Bases are allowed, and any Special rarity cards that don't have a Rare or Legendary variant are allowed.",
-      Formats::$GalacticCivilWar => "Only cards with the Rebel or Imperial traits are allowed.",
-      Formats::$CloneWars => "Only cards with the Republic or Separatist traits are allowed.",
+      Formats::$GalacticCivilWar => "Only units with Rebel or Imperial traits are allowed.",
+      Formats::$CloneWars => "Only units with Republic or Separatist traits are allowed.",
       default => "",
     };
   }
@@ -187,14 +187,20 @@ function IsAllowed($cardID, $format): bool {
       && !IsRareBase($cardID)
       ,
     //Only Uncommons and Commons, any unbanned leader, no Rare bases, any Special cards that don't have a rare or legendary variant
-    Formats::$SandcrawlerFormat => CardRarity ($cardID) != "Rare" && CardRarity($cardID) != "Legendary"
+    Formats::$SandcrawlerFormat => CardRarity($cardID) != "Rare" && CardRarity($cardID) != "Legendary"
       && !in_array($cardID, $banned)
       && !IsRareBase($cardID)
       ,
+    //Only Rebel and Imperial leaders and units
     Formats::$GalacticCivilWar => DefinedCardType($cardID) == "Base"
+        || DefinedCardType($cardID) == "Event"
+        || DefinedCardType($cardID) == "Upgrade"
         || TraitContains($cardID, "Rebel") || TraitContains($cardID, "Imperial")
       ,
+    //Only Republic and Separatist leaders and units
     Formats::$CloneWars => !DefinedCardType($cardID) == "Base"
+        || DefinedCardType($cardID) == "Event"
+        || DefinedCardType($cardID) == "Upgrade"
         || TraitContains($cardID, "Republic") || TraitContains($cardID, "Separatist")
       ,
     default => false,
