@@ -1664,7 +1664,9 @@ if ($lastUpdate != 0 && $cacheVal <= $lastUpdate) {
   echo ("<div id='sidebarWrapper'>");
 
   echo ("<div class='menu-buttons-wrapper-a'><div class='menu-buttons-wrapper-b'><table><tr>");
-  if (IsPatron($playerID)) {
+  if ($playerID == 3) {
+    echo ("<td><div class='MenuButtons' title='Click to view the menu. (Hotkey: M)' onclick='window.location.href=\"./MainMenu.php\";'><img class='exit-icon' src='./Images/close.png' /></div></td>");
+  } else if (IsPatron($playerID)) {
     echo ("<td><div class='MenuButtons' title='Click to view stats.' onclick='TogglePopup(\"myStatsPopup\");'><img class='settings-icon' src='./Images/stats-2.png' /></div></td>");
     echo ("<td><div class='MenuButtons' title='Click to view the menu. (Hotkey: M)' onclick='TogglePopup(\"menuPopup\");'><img class='settings-icon' src='./Images/cog.png' /></div></td>");
     echo ("<td><div class='MenuButtons' title='Click to view the menu. (Hotkey: M)' onclick='TogglePopup(\"leaveGame\");'><img class='exit-icon' src='./Images/close.png' /></div></td>");
@@ -1689,13 +1691,11 @@ if ($lastUpdate != 0 && $cacheVal <= $lastUpdate) {
   }
   echo ("</div>");
 
-  if ($playerID != 3) {
-    echo ("<div id='gamelog'>");
-    EchoLog($gameName);
-    echo ("</div>");
-    echo ("<div id='chatPlaceholder'></div>");
-    echo ("</div>");
-  }
+  echo ("<div id='gamelog'>");
+  EchoLog($gameName, $playerID);
+  echo ("</div>");
+  echo ("<div id='chatPlaceholder'></div>");
+  echo ("</div>");
 
   echo ("<div id='lastCurrentPlayer' style='display:none;'>" . $currentPlayer . "</div>");
   echo ("<div id='passConfirm' style='display:none;'>" . ($turn[0] == "ARS" && count($myHand) > 0 && !ArsenalFull($playerID) ? "true" : "false") . "</div>");
