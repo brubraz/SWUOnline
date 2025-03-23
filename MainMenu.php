@@ -142,28 +142,29 @@ include_once 'Header.php';
   if($canSeeQueue) {
     echo ("<option value='$standardFormat' " . ($defaultFormat == FormatCode($standardFormat) ? " selected" : "") . ">Premier Strict</option>");
     //echo ("<option value='$previewFormat'" . ($defaultFormat == FormatCode($previewFormat) ? " selected" : "") . ">" . FormatDisplayName($previewFormat) . "</option>");
+    //Cantina Brawl Format; Update this to rotate formats
     $funFormatBackendName = Formats::$PadawanFormat;
     $funFormatDisplayName = FormatDisplayName($funFormatBackendName);
     echo ("<option value='$funFormatBackendName'" . ($defaultFormat == FormatCode($funFormatBackendName) ? " selected" : "") . ">Cantina Brawl ($funFormatDisplayName)</option>");
-    //echo ("<option value='$openFormat'" . ($defaultFormat == FormatCode($openFormat) ? " selected" : "") . ">" . FormatDisplayName($openFormat) . "</option>");
   }
+  echo ("<option value='$openFormat'" . ($defaultFormat == FormatCode($openFormat) ? " selected" : "") . ">" . FormatDisplayName($openFormat) . "</option>");
   echo ("</select>");
   ?>
 
   <?php
   echo ("<label for='visibility' class='SelectDeckInput'>Game Visibility</label>");
   echo ("<select name='visibility' id='visibility'>");
-  
+
   if ($canSeeQueue) {
     echo ("<option value='public'" . ($defaultVisibility == 1 ? " selected" : "") . ">Public</option>");
   } else {
     echo '<p class="login-notice">&#10071;<a href="./LoginPage.php">Log In</a> to be able to create public games.</p>';
   }
-  
+
   echo ("<option value='private'" . ($defaultVisibility == 0 ? " selected" : "") . ">Private</option>");
   echo ("</select>");
   ?>
-  
+
   <!--
   <label for="deckTestMode">
     <input class='SelectDeckInput' type="checkbox" id="deckTestMode" name="deckTestMode" value="deckTestMode">
@@ -184,7 +185,7 @@ include_once 'Header.php';
   </div>
 
   <div class="petranaki-news container bg-yellow">
-    <h2>News</h2>  
+    <h2>News</h2>
     <div style="position: relative;">
       <div style='vertical-align:middle; text-align: start;'>
         <img src="./Images/jtl-han-solo.webp" style="width: 100%; height: 200px; object-fit: cover; border-radius: 10px;">
