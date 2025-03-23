@@ -1476,7 +1476,7 @@ function IndirectDamage($cardID, $sourcePlayer, $amount, $fromUnitEffect=false, 
 
   if ($targetPlayer == "") {
     AddDecisionQueue("SETDQCONTEXT", $sourcePlayer, "Choose player to receive " . $amount . " indirect damage");
-    AddDecisionQueue("BUTTONINPUT", $sourcePlayer, "Yourself,Opponent");
+    AddDecisionQueue("BUTTONINPUTNOPASS", $sourcePlayer, "Yourself,Opponent");
     AddDecisionQueue("CHOICETOPLAYERID", $sourcePlayer, "-");
   } else {
     AddDecisionQueue("PASSPARAMETER", $sourcePlayer, $targetPlayer);
