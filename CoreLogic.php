@@ -6408,7 +6408,7 @@ function PlayAbility($cardID, $from, $resourcesPaid, $target = "-", $additionalC
       break;
     case "8174214418"://Turbolaser Salvo
       AddDecisionQueue("SETDQCONTEXT", $currentPlayer, "Choose an arena to blast. ");
-      AddDecisionQueue("BUTTONINPUT", $currentPlayer, "Ground,Space");
+      AddDecisionQueue("BUTTONINPUT", $currentPlayer, "Space,Ground");
       AddDecisionQueue("SETDQVAR", $currentPlayer, "0");
       AddDecisionQueue("MULTIZONEINDICES", $currentPlayer, "MYALLY:arena=Space");
       AddDecisionQueue("SETDQCONTEXT", $currentPlayer, "Choose an attacking unit");
