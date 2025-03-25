@@ -1210,7 +1210,7 @@ function TraitContains($cardID, $trait, $player="", $index=-1) {
     $upgrades = $ally->GetUpgrades();
     for($i=0; $i<count($upgrades); ++$i) {
       switch ($upgrades[$i]) {
-        case "7687006104":
+        case "7687006104"://Foundling
           if($trait == "Mandalorian") return true;
           break;
         default: break;
@@ -1695,7 +1695,7 @@ function CanConfirmPhase($phase) {
   function TargetAlly() {
     global $mainPlayer, $CS_LayerTarget;
     $target = GetClassState($mainPlayer, $CS_LayerTarget);
-    $ally = new Ally($target, $mainPlayer);
+    $ally = new Ally($target);
     return $ally;
   }
   
