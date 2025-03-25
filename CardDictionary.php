@@ -1879,7 +1879,7 @@ function IsPlayable($cardID, $phase, $from, $index = -1, &$restriction = null, $
       + CurrentEffectCostModifiers($cardID, $from, reportMode:true);
   if($from == "HAND" //The Darksaber
       && $cardID == "3141660491" 
-      && SearchCount(SearchAllies($player, trait:"Mandalorian")) > 1
+      && SearchCount(SearchAllies($currentPlayer, trait:"Mandalorian")) > 1
       && NumResourcesAvailable($currentPlayer) > 4
     )return true;
   if($from == "HAND"
