@@ -1877,6 +1877,11 @@ function IsPlayable($cardID, $phase, $from, $index = -1, &$restriction = null, $
     : PilotingCost($cardID)
       + SelfCostModifier($cardID, $from, reportMode: true)
       + CurrentEffectCostModifiers($cardID, $from, reportMode:true);
+  if($from == "HAND" //The Darksaber
+      && $cardID == "3141660491" 
+      && SearchCount(SearchAllies($currentPlayer, trait:"Mandalorian")) > 1
+      && NumResourcesAvailable($currentPlayer) > 4
+    )return true;
   if($from == "HAND"
     && $potentialCost > NumResourcesAvailable($currentPlayer)
     && ($potentialPilotingCost == -1 || $potentialPilotingCost > NumResourcesAvailable($currentPlayer) || SearchCount(SearchAllies($player, trait:"Vehicle")) == 0)
