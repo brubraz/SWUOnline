@@ -1269,8 +1269,10 @@ function HasKeyword($cardID, $keyword, $player="", $index=-1){
 function ArenaContains($cardID, $arena, Ally $ally = null)
 {
   $cardArena = CardArenas($cardID);
-  return DelimStringContains($cardArena, $arena)
-    || ($ally != null && $ally->ArenaOverride() == $arena);
+  if ($ally != null) {
+    return $ally->CurrentArena() == $arena;
+  }
+  return DelimStringContains($cardArena, $arena);
 }
 
 function SubtypeContains($cardID, $subtype, $player="")
@@ -6132,7 +6134,7 @@ function PlayAbility($cardID, $from, $resourcesPaid, $target = "-", $additionalC
       break;
     case "2388374331"://Blue Leader
       if($from != "PLAY" && NumResourcesAvailable($currentPlayer) >= 2) {
-        AddDecisionQueue("YESNO", $currentPlayer, "Do you want to pay 2 to gain 2 experience tokens?", 1);
+        AddDecisionQueue("YESNO", $currentPlayer, "if you want to pay 2 to gain 2 experience tokens", 1);
         AddDecisionQueue("NOPASS", $currentPlayer, "-", 1);
         AddDecisionQueue("PAYRESOURCES", $currentPlayer, "2", 1);
         AddDecisionQueue("PASSPARAMETER", $currentPlayer, "MYALLY-" . $playAlly->Index(), 1);

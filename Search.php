@@ -119,6 +119,10 @@ function SearchInner(&$array, $player, $zone, $count, $type, $definedType,
   global $currentRound;
   $cardList = "";
   for ($i = 0; $i < count($array); $i += $count) {
+    $ally = null;
+    if($zone == "ALLY") {
+      $ally = new Ally("MYALLY-" . $i, $player);
+    }
     if($zone == "CHAR" && $array[$i+1] == 0) continue;
     $cardID = $array[$i];
     if(!isPriorityStep($cardID)) {
@@ -128,35 +132,30 @@ function SearchInner(&$array, $player, $zone, $count, $type, $definedType,
         && ($maxCost == -1 || CardCost($cardID) <= $maxCost)
         && ($minCost == -1 || CardCost($cardID) >= $minCost)
         && ($aspect == "" || AspectContains($cardID, $aspect, $player))
-        && ($arena == "" || ArenaContains($cardID, $arena, CheckAllySpecialCaseArena($zone, $array)))
+        && ($arena == "" || ArenaContains($cardID, $arena, $ally->UniqueID()))
         && ($cardTitle == "" || CardTitle($cardID) == GamestateUnsanitize($cardTitle))
         && ($trait == -1 || TraitContains($cardID, $trait, $player, $i))
         && ($keyword == "" || HasKeyword($cardID, $keyword, $player, $i))
       ) {
         if($maxAttack > -1) {
           if($zone == "ALLY") {
-            $ally = new Ally("MYALLY-" . $i, $player);
             if($ally->CurrentPower() > $maxAttack) continue;
           } elseif(AttackValue($cardID) > $maxAttack) continue;
         }
         if($maxHealth > -1) {
           if($zone == "ALLY") {
-            $ally = new Ally("MYALLY-" . $i, $player);
             if($ally->Health() > $maxHealth) continue;
           } elseif(CardHP($cardID) > $maxHealth) continue;
         }
         if($minAttack > -1) {
           if($zone == "ALLY") {
-            $ally = new Ally("MYALLY-" . $i, $player);
             if($ally->CurrentPower() < $minAttack) continue;
           } elseif(AttackValue($cardID) < $minAttack) continue;
         }
         if($hasBountyOnly && $zone == "ALLY") {
-          $ally = new Ally("MYALLY-" . $i, $player);
           if(!$ally->HasBounty()) continue;
         }
         if($hasUpgradeOnly === "token" && $zone == "ALLY") {
-          $ally = new Ally("MYALLY-" . $i, $player);
           $upgrades = $ally->GetUpgrades();
           $hasTokenUpgrade = false;
           foreach($upgrades as $upgrade) {
@@ -167,19 +166,15 @@ function SearchInner(&$array, $player, $zone, $count, $type, $definedType,
           }
           if(!$hasTokenUpgrade) continue;
         } else if($hasUpgradeOnly && $zone == "ALLY") {
-          $ally = new Ally("MYALLY-" . $i, $player);
           if(!$ally->IsUpgraded()) continue;
         }
         if($damagedOnly && $zone == "ALLY") {
-          $ally = new Ally("MYALLY-" . $i, $player);
           if(!$ally->IsDamaged()) continue;
         }
         if($canAddPilot && $zone == "ALLY") {
-          $ally = new Ally("MYALLY-" . $i, $player);
           if(!$ally->CanAddPilot()) continue;
         }
         if($hasPilotOnly && $zone == "ALLY") {
-          $ally = new Ally("MYALLY-" . $i, $player);
           if(!$ally->HasPilot()) continue;
         }
         if($hasWhenDefeatedOnly && $zone == "ALLY") {
@@ -209,20 +204,6 @@ function isPriorityStep($cardID)
       return true;
     default: return false;
   }
-}
-
-function CheckAllySpecialCaseArena($zone, $array)
-{
-  if($zone == "ALLY") {
-    for($i=0;$i<count($array);$i+=AllyPieces()) {
-      switch($array[$i]) {
-        case "2388374331"://Blue Leader JTL
-          return new Ally($array[$i+5]);
-        default: break;
-      }
-    }
-  };
-  return null;
 }
 
 function SearchHandForCard($player, $card)
