@@ -102,10 +102,7 @@ include_once 'Header.php';
   </form>
 </div>
 <div style="max-width: 40vw; margin: 0 auto;">
-  <div class='stats container bg-yellow'>
-      <p class='stats-font-lg'>For stats tracking, build or import your deck to <a href="https://swustats.net" target="_blank">swustats.net</a> and use the swustats deck link to play on Petranaki.</p>
-  </div>
-  <div class='profile-set-settings container bg-yellow' style="margin: 20px 20px 0 0;">
+  <div class='profile-set-settings container bg-yellow' style="margin: 0 20px 20px 0;">
     <h2>Game Settings</h2>
     <script>
       function OnFaveDeckChange(c) {
@@ -117,6 +114,32 @@ include_once 'Header.php';
         var ajaxLink = "api/UpdateMyPlayerSetting.php?userid=" + <?php echo ($_SESSION["userid"]); ?>;
         ajaxLink += "&piece=" + <?php echo ($SET_FavoriteDeckIndex); ?>;
         ajaxLink += `&value=${deckIndex}`;
+        xmlhttp.open("GET", ajaxLink, true);
+        xmlhttp.send();
+      }
+
+      function OnCardbackChange(c) {
+        const cardback = c.split("-")[1];
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) { window.location.reload(); }
+        }
+        var ajaxLink = "api/UpdateMyPlayerSetting.php?userid=" + <?php echo ($_SESSION["userid"]); ?>;
+        ajaxLink += "&piece=" + <?php echo ($SET_Cardback); ?>;
+        ajaxLink += `&value=${cardback}`;
+        xmlhttp.open("GET", ajaxLink, true);
+        xmlhttp.send();
+      }
+
+      function OnBackgroundChange(c) {
+        const background = c.split("-")[1];
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) { window.location.reload(); }
+        }
+        var ajaxLink = "api/UpdateMyPlayerSetting.php?userid=" + <?php echo ($_SESSION["userid"]); ?>;
+        ajaxLink += "&piece=" + <?php echo ($SET_Background); ?>;
+        ajaxLink += `&value=${background}`;
         xmlhttp.open("GET", ajaxLink, true);
         xmlhttp.send();
       }
@@ -139,7 +162,27 @@ include_once 'Header.php';
       }
       echo ("</select></div>");
     }
+    if(!isset($settingArray[$SET_Cardback])) $settingArray[$SET_Cardback] = 0;
+    $cbSource = "./concat/" . GetCardBack("", $settingArray[$SET_Cardback]) . ".webp";
+    echo ("<div class='SelectDeckInput'>Cardbacks: <span style='margin-left: 25%;'> Preview:");
+    echo ("<img src=$cbSource alt='cardback' style='width: 85px; height: 85px; margin-left: 20px;'></span>");
+    echo ("<select onchange='OnCardbackChange(event.target.value)' name='cardbacks' id='cardbacks'>");
+    echo CardbacksDropdowns($settingArray);
+    echo ("</select></div>");
     ?>
+    <p>if you have a Patreon cardback, that will have to be changed in-game still (for now).</p>
+    <?php
+    if(!isset($settingArray[$SET_Background])) $settingArray[$SET_Background] = 0;
+    $bgSource = "./Images/" . GetGameBgSrc($settingArray[$SET_Background])[0];
+    echo ("<div class='SelectDeckInput'>Backgrounds: <span style='margin-left: 15%;'> Preview:");
+    echo ("<img src=$bgSource alt='cardback' style='width: 160px; height: 90px; margin-left: 20px;'></span>");
+    echo ("<select onchange='OnBackgroundChange(event.target.value)' name='backgrounds' id='backgrounds'>");
+    echo GameBackgroundDropdowns($settingArray);
+    echo ("</select></div>");
+    ?>
+  </div>
+  <div class='stats container bg-yellow'>
+    <p style="font-size: 1.52rem;">For stats tracking, build or import your deck to <a href="https://swustats.net" target="_blank">swustats.net</a> and use the swustats deck link to play on Petranaki.</p>
   </div>
 </div>
 </div>
