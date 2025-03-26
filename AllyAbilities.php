@@ -2690,7 +2690,7 @@ function SpecificAllyAttackAbilities($attackerUniqueID=0, $reportMode=false)
       break;
     case "9115773123"://Coruscant Dissident
       $totalOnAttackAbilities++;
-      if ($reportMode) break;2
+      if ($reportMode) break;
       ReadyResource($mainPlayer);
       break;
     case "e091d2a983"://Rey Leader Unit
