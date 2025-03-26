@@ -1,4 +1,8 @@
 <?php
+include "../Libraries/PlayerSettings.php";
+include "../includes/functions.inc.php";
+include "../includes/dbh.inc.php";
+header('Content-Type: application/json; charset=utf-8');
 session_start();
 if (!isset($_SESSION['userid'])) {
   echo json_encode(["error" => "Not logged in"]);
@@ -27,9 +31,6 @@ $settingValue = htmlentities($settingValue, ENT_QUOTES);
 $settingPiece = str_replace("'", "\'", $settingPiece);
 $settingValue = str_replace("'", "\'", $settingValue);
 session_write_close();
-include_once "../Libraries/PlayerSettings.php";
-include_once "../includes/functions.inc.php";
-include_once "../includes/dbh.inc.php";
 if(!SaveSettingInDatabase($settingPiece))
 {
   echo json_encode(["error" => "Invalid setting"]);
