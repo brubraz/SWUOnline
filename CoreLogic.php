@@ -4757,7 +4757,7 @@ function PlayAbility($cardID, $from, $resourcesPaid, $target = "-", $additionalC
     case "4352150438"://Rey
       $abilityName = GetResolvedAbilityName($cardID, $from);
       if($abilityName == "Experience") {
-        AddDecisionQueue("MULTIZONEINDICES", $currentPlayer, "MYALLY:maxAttack=2");
+        AddDecisionQueue("MULTIZONEINDICES", $currentPlayer, "MYALLY:maxAttack=2&THEIRALLY:maxAttack=2");
         AddDecisionQueue("SETDQCONTEXT", $currentPlayer, "Choose a unit to give an experience");
         AddDecisionQueue("MAYCHOOSEMULTIZONE", $currentPlayer, "<-", 1);
         AddDecisionQueue("MZOP", $currentPlayer, "ADDEXPERIENCE", 1);
