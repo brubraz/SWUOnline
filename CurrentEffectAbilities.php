@@ -11,7 +11,7 @@ function EffectHitEffect($cardID)
       $ally = new Ally(AttackerMZID($mainPlayer), $mainPlayer);
       if(!$ally->LostAbilities()) {
         WriteLog("Heroic Sacrifice defeated " . CardLink($ally->CardID(), $ally->CardID()));
-        $ally->Destroy();
+        $ally->Destroy(enemyEffects:false);
       }
       break;
     case "8988732248-1"://Rebel Assault

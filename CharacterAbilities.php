@@ -360,7 +360,7 @@ function CharacterHasWhenPlayCardAbility($player, $characterIndex, $playedCardID
       case "1384530409"://Cad Bane
         return $character->IsReady() && TraitContains($playedCardID, "Underworld", $player) && SearchCount(SearchAllies($otherPlayer)) > 0;
       case "2358113881"://Quinlan Vos
-        if ($character->IsReady() && DefinedTypesContains($playedCardID, "Unit", $player)) {
+        if ($character->IsReady() && DefinedTypesContains($playedCardID, "Unit", $player) && !PilotWasPlayed($player, $playedCardID)) {
           $cardCost = CardCost($playedCardID);
           $theirAllies = &GetTheirAllies($player);
 

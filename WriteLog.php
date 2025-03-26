@@ -68,13 +68,20 @@ function WriteError($text)
   WriteLog("ERROR: " . $text);
 }
 
-function EchoLog($gameName)
+function EchoLog($gameName, $playerID = 0)
 {
   $filename = LogPath($gameName);
   $filesize = filesize($filename);
   if ($filesize > 0 && ($handler = fopen($filename, "r"))) {
-    echo(fread($handler, $filesize));
+    $content = fread($handler, $filesize);
     fclose($handler);
+    
+    if ($playerID == 3) {
+      $content = preg_replace('/<span class=\'p1-label bold\'>(.*?)(<img.*?>)?\s*((?!Player 1).*?)<\/span>/', '<span class=\'p1-label bold\'>$2 Player 1</span>', $content);
+      $content = preg_replace('/<span class=\'p2-label bold\'>(.*?)(<img.*?>)?\s*((?!Player 2).*?)<\/span>/', '<span class=\'p2-label bold\'>$2 Player 2</span>', $content);
+    }
+    
+    echo($content);
   }
 }
 
