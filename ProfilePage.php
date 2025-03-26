@@ -3,6 +3,7 @@
 <?php
 require "MenuBar.php";
 include_once './AccountFiles/AccountDatabaseAPI.php';
+include "Libraries/PlayerSettings.php";
 
 if (!isset($_SESSION['userid'])) {
     header('Location: ./MainMenu.php');
@@ -65,64 +66,82 @@ include_once 'Header.php';
 <div id="cardDetail" style="z-index:100000; display:none; position:fixed;"></div>
 
 <div class="core-wrapper">
-
 <div class='fav-decks container bg-yellow'>
-<div style="display:flex; gap: 16px;">
-    <h2 style="flex-grow: 1;">Welcome <?php echo $_SESSION['useruid'] ?>!</h2>
-    <a href="ChangeUsername.php">
-        <button name="change-username" style="height: 40px">Change Username</button>
-    </a>
-    <a href="ChangePassword.php">
-        <button name="change-password" style="height: 40px">Change Password</button>
-    </a>
-</div>
-<?php
-DisplayPatreon();
-
-echo ("<h2>Favorite Decks</h2>");
-$favoriteDecks = LoadFavoriteDecks($_SESSION["userid"]);
-if (count($favoriteDecks) > 0) {
-    echo ("<table>");
-    echo ("<tr><td>Hero</td><td>Deck Name</td><td>Link</td><td>Delete</td></tr>");
-    for ($i = 0; $i < count($favoriteDecks); $i += 4) {
-        echo ("<tr>");
-        echo ("<td>" . CardLink($favoriteDecks[$i + 2], $favoriteDecks[$i + 2], true) . "</td>");
-        echo ("<td>" . $favoriteDecks[$i + 1] . "</td>");
-        echo ("<td>" . ParseLink($favoriteDecks[$i]) . "</td>");
-        echo ("<td><a style='text-underline-offset:5px;' href='./MenuFiles/DeleteDeck.php?decklink=" . urlencode($favoriteDecks[$i]) . "'>Delete</a></td>");
-        echo ("</tr>");
-    }
-    echo ("</table>");
-}
-?>
-<h2>Block List</h2>
-<form class="form-resetpwd" action="includes/BlockUser.php" method="post">
-    <input class="block-input" type="text" name="userToBlock" placeholder="User to block">
-    <button type="submit" name="block-user-submit">Block</button>
-</form>
-</div>
-
-<div class='stats container bg-yellow'>
-    <p class='stats-font-lg'>For stats tracking, build or import your deck to <a href="https://swustats.net" target="_blank">swustats.net</a> and use the swustats deck link to play on Petranaki.</p>
-    <!--
-<form id="filterForm">
-    <input type="date" name="startDate" value="<?php echo $startDate; ?>">
-    <input type="date" name="endDate" value="<?php echo $endDate; ?>">
-    <button type="button" id="filterButton">Filter Stats</button>
-</form>
+  <div style="display:flex; gap: 16px; max-width: 50vw;">
+      <h2 style="flex-grow: 1;">Welcome <?php echo $_SESSION['useruid'] ?>!</h2>
+      <a href="ChangeUsername.php">
+          <button name="change-username" style="height: 40px">Change Username</button>
+      </a>
+      <a href="ChangePassword.php">
+          <button name="change-password" style="height: 40px">Change Password</button>
+      </a>
+  </div>
   <?php
-  echo ("<h2>Your Record</h2>");
-  $forIndividual = true; ?>
+  DisplayPatreon();
 
- <div id="statsContainer">
-    <p id="loadingMessage" style="display:none;">Loading stats...</p>
-    <?php include "zzGameStats.php"; ?>
+  echo ("<h2>Favorite Decks</h2>");
+  $favoriteDecks = LoadFavoriteDecks($_SESSION["userid"]);
+  if (count($favoriteDecks) > 0) {
+      echo ("<table>");
+      echo ("<tr><td>Hero</td><td>Deck Name</td><td>Link</td><td>Delete</td></tr>");
+      for ($i = 0; $i < count($favoriteDecks); $i += 4) {
+          echo ("<tr>");
+          echo ("<td>" . CardLink($favoriteDecks[$i + 2], $favoriteDecks[$i + 2], true) . "</td>");
+          echo ("<td>" . $favoriteDecks[$i + 1] . "</td>");
+          echo ("<td>" . ParseLink($favoriteDecks[$i]) . "</td>");
+          echo ("<td><a style='text-underline-offset:5px;' href='./MenuFiles/DeleteDeck.php?decklink=" . urlencode($favoriteDecks[$i]) . "'>Delete</a></td>");
+          echo ("</tr>");
+      }
+      echo ("</table>");
+  }
+  ?>
+  <h2>Block List</h2>
+  <form class="form-resetpwd" action="includes/BlockUser.php" method="post">
+      <input class="block-input" type="text" name="userToBlock" placeholder="User to block">
+      <button type="submit" name="block-user-submit">Block</button>
+  </form>
 </div>
--->
+<div style="max-width: 40vw; margin: 0 auto;">
+  <div class='stats container bg-yellow'>
+      <p class='stats-font-lg'>For stats tracking, build or import your deck to <a href="https://swustats.net" target="_blank">swustats.net</a> and use the swustats deck link to play on Petranaki.</p>
+  </div>
+  <div class='profile-set-settings container bg-yellow' style="margin: 20px 20px 0 0;">
+    <h2>Game Settings</h2>
+    <script>
+      function OnFaveDeckChange(c) {
+        const deckIndex = c.split("<fav>")[0];
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) { }
+        }
+        var ajaxLink = "api/UpdateMyPlayerSetting.php?userid=" + <?php echo ($_SESSION["userid"]); ?>;
+        ajaxLink += "&piece=" + <?php echo ($SET_FavoriteDeckIndex); ?>;
+        ajaxLink += `&value=${deckIndex}`;
+        xmlhttp.open("GET", ajaxLink, true);
+        xmlhttp.send();
+      }
+    </script>
+    <?php
+    $savedSettings = LoadSavedSettings($_SESSION["userid"]);
+    $settingArray = [];
+    for ($i = 0; $i < count($savedSettings); $i += 2) {
+      $settingArray[$savedSettings[intval($i)]] = $savedSettings[intval($i) + 1];
+    }
+    $favoriteDecks = [];
+    $favoriteDecks = LoadFavoriteDecks($_SESSION["userid"]);
+    if (count($favoriteDecks) > 0) {
+      $selIndex = -1;
+      if (isset($settingArray[$SET_FavoriteDeckIndex])) $selIndex = $settingArray[$SET_FavoriteDeckIndex];
+      echo ("<div class='SelectDeckInput'>Favorite Deck");
+      echo ("<select onchange='OnFaveDeckChange(event.target.value)' name='favoriteDecks' id='favoriteDecks'>");
+      for ($i = 0; $i < count($favoriteDecks); $i += 4) {
+        echo ("<option value='" . $i . "<fav>" . $favoriteDecks[$i] . "'" . ($i == $selIndex ? " selected " : "") . ">" . $favoriteDecks[$i + 1] . "</option>");
+      }
+      echo ("</select></div>");
+    }
+    ?>
+  </div>
 </div>
-
-
-
 </div>
 
 
