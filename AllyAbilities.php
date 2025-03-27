@@ -1358,13 +1358,17 @@ function AllyPlayedAsUpgradeAbility($cardID, $player, $targetAlly) {
     //Jump to Lightspeed
     case "5673100759"://Boshek
       $cards = explode(",",Mill($player, 2));
+      // Reverse the order of the cards array
+      $cards = array_reverse($cards);
+      $totalReturned = 0;
       for($i=0; $i<count($cards); ++$i) {
         WriteLog(CardLink($cards[$i], $cards[$i]) . " was discarded.");
         if(CardCostIsOdd($cards[$i])) {
-          WriteLog(CardLink("5673100759", "5673100759") . "returns " . CardLink($cards[$i], $cards[$i]) . " to hand.");
+          WriteLog(CardLink("5673100759", "5673100759") . " returns " . CardLink($cards[$i], $cards[$i]) . " to hand.");
           $discard = &GetDiscard($player);
-          RemoveDiscard($player, count($discard) - DiscardPieces());
+          RemoveDiscard($player, count($discard) - (DiscardPieces() * ($i + 1 - $totalReturned)));
           AddHand($player, $cards[$i]);
+          $totalReturned++;
         }
       }
       break;
