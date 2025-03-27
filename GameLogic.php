@@ -679,18 +679,18 @@ function DecisionQueueStaticEffect($phase, $player, $parameter, $lastResult)
 
           foreach ($targets as $target) {
             $targetArr = explode("-", $target);
-            $targetHeal = $targetArr[0];
+            $targetDamage = $targetArr[0];
             $targetUniqueID = $targetArr[1];
             if (is_numeric($targetUniqueID)) {
               $ally = new Ally($targetUniqueID);
               $isEnemeyDamage = $sourcePlayer != $ally->Controller();
               $currentHealth = $ally->Health();
-              $destroyed = $ally->DealDamage($targetHeal, enemyDamage:$isEnemeyDamage, fromUnitEffect:$isUnitEffect, preventable:$isPreventable);
+              $destroyed = $ally->DealDamage($targetDamage, enemyDamage:$isEnemeyDamage, fromUnitEffect:$isUnitEffect, preventable:$isPreventable);
               if ($destroyed || $ally->Health() < $currentHealth) {
                 $damagedTargets[] = $targetUniqueID;
               }
             } else {
-              DealDamageAsync($targetUniqueID[1], $targetHeal, sourcePlayer:$sourcePlayer);
+              DealDamageAsync($targetUniqueID[1], $targetDamage, sourcePlayer:$sourcePlayer);
               $damagedTargets[] = $targetUniqueID;
             }          
           }
