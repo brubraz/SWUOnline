@@ -106,6 +106,22 @@ function GetBackground($player)
       return "Space/Ground Battlefield 1";
     case 7:
       return "Yoda TWI";
+    case 8:
+      return "Ahsoka Sabers";
+    case 9:
+      return "Capital Ship JTL";
+    case 10:
+      return "Boba Daimyo";
+    case 11:
+      return "Fett's Firespray";
+    case 12:
+      return "Din Grogu";
+    case 13:
+      return "High Ground";
+    case 14:
+      return "Keep Fighting";
+    case 15:
+      return "R2-D2";
     case 101:
       return "SOR Starfield";
     case 102:
@@ -144,6 +160,22 @@ function BackgroundCode($name)
       return 6;
     case "Yoda TWI":
       return 7;
+    case "Ahsoka Sabers":
+      return 8;
+    case "Capital Ship JTL":
+      return 9;
+    case "Boba Daimyo":
+      return 10;
+    case "Fett's Firespray":
+      return 11;
+    case "Din Grogu":
+      return 12;
+    case "High Ground":
+      return 13;
+    case "Keep Fighting":
+      return 14;
+    case "R2-D2":
+      return 15;
     case "SOR Starfield":
       return 101;
     case "SHD Starfield":
@@ -182,6 +214,22 @@ function GetGameBgSrc($code)
       return ["bg-battlefields.jpg", false];
     case 7:
       return ["bg-yoda.png", false];
+    case 8:
+      return ["bg-ahsoka-sabers.png", false];
+    case 9:
+      return ["bg-capital-ship.png", false];
+    case 10:
+      return ["bg-boba-daimyo.png", false];
+    case 11:
+      return ["bg-fetts-firespray.png", false];
+    case 12:
+      return ["bg-din-grogu.png", false];
+    case 13:
+      return ["bg-highground.png", false];
+    case 14:
+      return ["bg-keepfighting.png", false];
+    case 15:
+      return ["bg-r2d2.png", false];
     case 101:
       return ["SWUKeyArt/SWH01_Starfield.png", false];
     case 102:
