@@ -163,6 +163,10 @@ $cardBack = new stdClass();
 $cardBack->name = "C4";
 $cardBack->id = 41;
 $response->cardBacks[] = $cardBack;
+$cardBack = new stdClass();
+$cardBack->name = "Golden Eagle Gaming";
+$cardBack->id = 42;
+$response->cardBacks[] = $cardBack;
 
 $response->playmats = [];
 if(IsUserLoggedIn()) {

@@ -104,6 +104,8 @@ function GetBackground($player)
       return "The Darksaber";
     case 6:
       return "Space/Ground Battlefield 1";
+    case 7:
+      return "Yoda TWI";
     case 101:
       return "SOR Starfield";
     case 102:
@@ -140,6 +142,8 @@ function BackgroundCode($name)
       return 5;
     case "Space/Ground Battlefield 1":
       return 6;
+    case "Yoda TWI":
+      return 7;
     case "SOR Starfield":
       return 101;
     case "SHD Starfield":
@@ -176,6 +180,8 @@ function GetGameBgSrc($code)
       return ["bg-darksaber.png", false];
     case 6:
       return ["bg-battlefields.jpg", false];
+    case 7:
+      return ["bg-yoda.png", false];
     case 101:
       return ["SWUKeyArt/SWH01_Starfield.png", false];
     case 102:
@@ -248,6 +254,7 @@ function GetCardBack($player, $index="")
     39 => "nordic-takedown",
     40 => "sekrit",
     41 => "C4",
+    42 => "CB_GEG",
     default => "CardBack",
   };
 }

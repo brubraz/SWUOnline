@@ -41,6 +41,7 @@ function CardbacksDropdowns($settings) {
   $rv .= CreateSelectOption($SET_Cardback . "-" . 39, "The Nordic Takedown", $SET_Cardback . "-" . $settings[$SET_Cardback]);
   $rv .= CreateSelectOption($SET_Cardback . "-" . 40, "Sekrit", $SET_Cardback . "-" . $settings[$SET_Cardback]);
   $rv .= CreateSelectOption($SET_Cardback . "-" . 41, "C4", $SET_Cardback . "-" . $settings[$SET_Cardback]);
+  $rv .= CreateSelectOption($SET_Cardback . "-" . 42, "Golden Eagle Gaming", $SET_Cardback . "-" . $settings[$SET_Cardback]);
   return $rv;
 }
 
@@ -54,6 +55,7 @@ function GameBackgroundDropdowns($settings) {
   $rv .= CreateSelectOption($SET_Background . "-" . 4, "Overwhelming Barrage", $SET_Background . "-" . $settings[$SET_Background]);
   $rv .= CreateSelectOption($SET_Background . "-" . 5, "The Darksaber", $SET_Background . "-" . $settings[$SET_Background]);
   $rv .= CreateSelectOption($SET_Background . "-" . 6, "Space/Ground Battlefield 1", $SET_Background . "-" . $settings[$SET_Background]);
+  $rv .= CreateSelectOption($SET_Background . "-" . 7, "Yoda TWI", $SET_Background . "-" . $settings[$SET_Background]);
   $rv .= CreateSelectOption($SET_Background . "-" . 101, "SOR Starfield", $SET_Background . "-" . $settings[$SET_Background]);
   $rv .= CreateSelectOption($SET_Background . "-" . 102, "SHD Starfield", $SET_Background . "-" . $settings[$SET_Background]);
   $rv .= CreateSelectOption($SET_Background . "-" . 103, "TWI Starfield", $SET_Background . "-" . $settings[$SET_Background]);
