@@ -1265,13 +1265,15 @@ function AdmiralHoldoWereNotAlone($player, $flipped) {
       $indices[] = "THEIRALLY-" . $i;
     }
   }
-  AddDecisionQueue("PASSPARAMETER", $player, implode(",", $indices));
-  AddDecisionQueue("SETDQCONTEXT", $player, "Choose a unit to give +2/+2");
-  if(!$flipped) AddDecisionQueue("CHOOSEMULTIZONE", $player, "<-", 1);
-  else AddDecisionQueue("MAYCHOOSEMULTIZONE", $player, "<-", 1);
-  AddDecisionQueue("MZOP", $player, "ADDHEALTH,2", 1);
-  AddDecisionQueue("MZOP", $player, "GETUNIQUEID", 1);
-  AddDecisionQueue("ADDLIMITEDCURRENTEFFECT", $player, "8943696478,PLAY", 1);
+  if (count($indices) > 0) {
+    AddDecisionQueue("PASSPARAMETER", $player, implode(",", $indices));
+    AddDecisionQueue("SETDQCONTEXT", $player, "Choose a unit to give +2/+2");
+    if(!$flipped) AddDecisionQueue("CHOOSEMULTIZONE", $player, "<-", 1);
+    else AddDecisionQueue("MAYCHOOSEMULTIZONE", $player, "<-", 1);
+    AddDecisionQueue("MZOP", $player, "ADDHEALTH,2", 1);
+    AddDecisionQueue("MZOP", $player, "GETUNIQUEID", 1);
+    AddDecisionQueue("ADDLIMITEDCURRENTEFFECT", $player, "8943696478,PLAY", 1);
+  }
 }
 
 function AdmiralAckbarItsATrap($player, $flipped) {

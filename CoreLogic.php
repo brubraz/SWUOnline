@@ -6269,13 +6269,25 @@ function PlayAbility($cardID, $from, $resourcesPaid, $target = "-", $additionalC
       break;
     case "3722493191"://IG-2000
        if($from != "PLAY" && SearchCount(SearchAllies($otherPlayer)) > 0) {
-        AddDecisionQueue("SETDQCONTEXT", $currentPlayer, "Choose up to 3 units to damage", 1);
-        AddDecisionQueue("FINDINDICES", $currentPlayer, "ALLTHEIRUNITSMULTILIMITED,3", 1);
-        AddDecisionQueue("MULTICHOOSETHEIRUNIT", $currentPlayer, "<-", 1);
-        AddDecisionQueue("MZOP", $currentPlayer, "MAPTHEIRINDICES", 1);
-        AddDecisionQueue("MULTIDAMAGE", $currentPlayer, DealDamageBuilder(1, $currentPlayer, 1), 1);
+        AddDecisionQueue("PASSPARAMETER", $currentPlayer, "-");
+        AddDecisionQueue("SETDQVAR", $currentPlayer, "0");
+        AddDecisionQueue("SETDQVAR", $currentPlayer, "1");
+        for ($i = 3; $i > 0; $i--) {
+          AddDecisionQueue("MULTIZONEINDICES", $currentPlayer, "MYALLY&THEIRALLY", 1);
+          AddDecisionQueue("MZFILTER", $currentPlayer, "dqVar=0", 1);
+          AddDecisionQueue("SETDQCONTEXT", $currentPlayer, "Choose up to $i unit" . ($i > 1 ? "s" : "") . " to damage", 1);
+          AddDecisionQueue("MAYCHOOSEMULTIZONE", $currentPlayer, "<-", 1);
+          AddDecisionQueue("APPENDDQVAR", $currentPlayer, "0", 1);
+          AddDecisionQueue("MZOP", $currentPlayer, "GETUNIQUEID", 1);
+          AddDecisionQueue("SETDQVAR", $currentPlayer, "2", 1);
+          AddDecisionQueue("PASSPARAMETER", $currentPlayer, "1-{2}", 1);
+          AddDecisionQueue("APPENDDQVAR", $currentPlayer, "1", 1);
+        }
+        AddDecisionQueue("PASSPARAMETER", $currentPlayer, "{1}");
+        AddDecisionQueue("EQUALPASS", $currentPlayer, "-");
+        AddDecisionQueue("MZOP", $currentPlayer, DealMultiDamageBuilder($currentPlayer, isUnitEffect:1), 1);
       }
-        break;
+      break;
     case "0964312065"://It's A Trap!
       $spaceAllies = SearchAllies($currentPlayer, arena:"Space");
       $spaceEnemiesCount = SearchCount(SearchAllies($otherPlayer, arena:"Space"));

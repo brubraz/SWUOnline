@@ -415,6 +415,7 @@ function SpecificCardLogic($player, $parameter, $lastResult)
       break;
     case "C3PO":
       $deck = new Deck($player);
+      WriteLog("Player $player chose number $lastResult.");
       AddDecisionQueue("PASSPARAMETER", $player, $deck->Top());
       AddDecisionQueue("SETDQVAR", $player, 0);
       if(CardCost($deck->Top()) == $lastResult) {
