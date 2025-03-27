@@ -1613,10 +1613,10 @@ function DecisionQueueStaticEffect($phase, $player, $parameter, $lastResult)
       $threshold = $parameters[1];
       if(GetClassState($player, $state) < $threshold) return "PASS";
       return 1;
-    case "CHARREADYORPASS":
+    case "LEADERREADYORPASS":
       $char = &GetPlayerCharacter($player);
-      if($char[$parameter + 1] != 2) return "PASS";
-      return 1;
+      if(count($char) < CharacterPieces() + 1 || $char[CharacterPieces() + 1] != 2) return "PASS";
+      return $lastResult;
     case "ATTACKMODIFIER":
       $amount = intval($parameter);
       WriteLog($amount);

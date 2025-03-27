@@ -3464,7 +3464,8 @@ function AllyDamageTakenAbilities($player, $index, $damage, $fromCombat=false, $
       case "cfdcbd005a"://Jango Fett Leader Unit
         if(!LeaderAbilitiesIgnored() && !$damagedAlly->IsExhausted() && ($fromCombat || ($enemyDamage && $fromUnitEffect))) {
           PrependDecisionQueue("MZOP", $player, "REST", 1);
-          PrependDecisionQueue("PASSPARAMETER", $player, "MYALLY-" . $index, 1);
+          PrependDecisionQueue("UIDOP", $player, "GETMZINDEX", 1);
+          PrependDecisionQueue("PASSPARAMETER", $player, $damagedAlly->UniqueID(), 1);
           PrependDecisionQueue("NOPASS", $otherPlayer, "-");
           PrependDecisionQueue("YESNO", $otherPlayer, "if you want use Jango Fett's ability on " . CardLink($damagedAlly->CardID(), $damagedAlly->CardID()));
         }
@@ -3492,10 +3493,12 @@ function AllyDamageTakenAbilities($player, $index, $damage, $fromCombat=false, $
       case "9155536481"://Jango Fett Leader
         if(!LeaderAbilitiesIgnored() && !$damagedAlly->IsExhausted() && $theirCharacter[$i+1] == 2 && ($fromCombat || ($enemyDamage && $fromUnitEffect))) {
           PrependDecisionQueue("MZOP", $player, "REST", 1);
-          PrependDecisionQueue("PASSPARAMETER", $player, "MYALLY-" . $index, 1);
+          PrependDecisionQueue("UIDOP", $player, "GETMZINDEX", 1);
+          PrependDecisionQueue("PASSPARAMETER", $player, $damagedAlly->UniqueID(), 1);
           PrependDecisionQueue("EXHAUSTCHARACTER", $otherPlayer, FindCharacterIndex($otherPlayer, "9155536481"), 1);
-          PrependDecisionQueue("NOPASS", $otherPlayer, "-");
-          PrependDecisionQueue("YESNO", $otherPlayer, "if you want use Jango Fett's ability on " . CardLink($damagedAlly->CardID(), $damagedAlly->CardID()));
+          PrependDecisionQueue("NOPASS", $otherPlayer, "-", 1);
+          PrependDecisionQueue("YESNO", $otherPlayer, "if you want use Jango Fett's ability on " . CardLink($damagedAlly->CardID(), $damagedAlly->CardID()), 1);
+          PrependDecisionQueue("LEADERREADYORPASS", $otherPlayer, "-");
         }
         break;
       default: break;
