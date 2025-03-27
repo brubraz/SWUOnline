@@ -71,7 +71,7 @@ td {
 .spaceArena-dimmer {
   z-index: -6;
   left: 41px;
-  border: 2px solid rgba(90, 70, 30, 0.8);
+  border: 2px solid rgba(108, 108, 120, 0.8);
 }
 
 #groundArena {
@@ -82,7 +82,7 @@ td {
 .groundArena-dimmer {
   z-index: -6;
   right: 278px;
-  border: 2px solid rgba(90, 70, 30, 0.8);
+  border: 2px solid rgba(108, 108, 120, 0.8);
 }
 
 /* Player Names */

@@ -56,6 +56,14 @@ function GameBackgroundDropdowns($settings) {
   $rv .= CreateSelectOption($SET_Background . "-" . 5, "The Darksaber", $SET_Background . "-" . $settings[$SET_Background]);
   $rv .= CreateSelectOption($SET_Background . "-" . 6, "Space/Ground Battlefield 1", $SET_Background . "-" . $settings[$SET_Background]);
   $rv .= CreateSelectOption($SET_Background . "-" . 7, "Yoda TWI", $SET_Background . "-" . $settings[$SET_Background]);
+  $rv .= CreateSelectOption($SET_Background . "-" . 8, "Ahsoka Sabers", $SET_Background . "-" . $settings[$SET_Background]);
+  $rv .= CreateSelectOption($SET_Background . "-" . 9, "Capital Ship JTL", $SET_Background . "-" . $settings[$SET_Background]);
+  $rv .= CreateSelectOption($SET_Background . "-" . 10, "Boba Daimyo", $SET_Background . "-" . $settings[$SET_Background]);
+  $rv .= CreateSelectOption($SET_Background . "-" . 11, "Fett's Firespray", $SET_Background . "-" . $settings[$SET_Background]);
+  $rv .= CreateSelectOption($SET_Background . "-" . 12, "Din Grogu", $SET_Background . "-" . $settings[$SET_Background]);
+  $rv .= CreateSelectOption($SET_Background . "-" . 13, "High Ground", $SET_Background . "-" . $settings[$SET_Background]);
+  $rv .= CreateSelectOption($SET_Background . "-" . 14, "Keep Fighting", $SET_Background . "-" . $settings[$SET_Background]);
+  $rv .= CreateSelectOption($SET_Background . "-" . 15, "R2-D2", $SET_Background . "-" . $settings[$SET_Background]);
   $rv .= CreateSelectOption($SET_Background . "-" . 101, "SOR Starfield", $SET_Background . "-" . $settings[$SET_Background]);
   $rv .= CreateSelectOption($SET_Background . "-" . 102, "SHD Starfield", $SET_Background . "-" . $settings[$SET_Background]);
   $rv .= CreateSelectOption($SET_Background . "-" . 103, "TWI Starfield", $SET_Background . "-" . $settings[$SET_Background]);
