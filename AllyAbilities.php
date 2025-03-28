@@ -138,7 +138,7 @@ function CheckUniqueAlly($uniqueID, $reportMode = false) {
     }
 
     if (!$reportMode && $uniqueAllyInPlay) {
-      PrependDecisionQueue("MZDESTROY", $player, "-", 1);
+      PrependDecisionQueue("MZOP", $player, "DESTROY,$player", 1);
       PrependDecisionQueue("CHOOSEMULTIZONE", $player, "<-", 1);
       PrependDecisionQueue("SETDQCONTEXT", $player, "You have two of this unique unit; choose one to destroy", 1);
       PrependDecisionQueue("MULTIZONEINDICES", $player, "MYALLY:cardID=" . $cardID, 1);
