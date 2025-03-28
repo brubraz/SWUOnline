@@ -1700,7 +1700,7 @@ function CanConfirmPhase($phase) {
     $ally = new Ally($target);
     return $ally;
   }
-  
+
   function AttackerAlly() {
     global $mainPlayer;
     $attackerMZ = AttackerMZID($mainPlayer);
@@ -6415,6 +6415,7 @@ function PlayAbility($cardID, $from, $resourcesPaid, $target = "-", $additionalC
         AddDecisionQueue("MULTIZONEINDICES", $currentPlayer, "MYALLY");
         AddDecisionQueue("SETDQCONTEXT", $currentPlayer, "Choose a unit to lose abilities");
         AddDecisionQueue("CHOOSEMULTIZONE", $currentPlayer, "<-", 1);
+        AddDecisionQueue("SHOWSELECTEDTARGET", $currentPlayer, "-", 1);
         AddDecisionQueue("MZOP", $currentPlayer, "GETUNIQUEID", 1);
         AddDecisionQueue("ADDLIMITEDROUNDEFFECT", $currentPlayer, "4531112134,PLAY", 1);
         AddDecisionQueue("SWAPTURN", $currentPlayer, "-");
