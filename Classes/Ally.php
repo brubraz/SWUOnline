@@ -762,9 +762,9 @@ class Ally {
 
   function HasUpgrade($upgradeID) {
     if($this->index == -1) return false;
-    $subcards = $this->GetSubcards();
-    for($i=0; $i<count($subcards); $i+=SubcardPieces()) {
-      if($subcards[$i] == $upgradeID) {
+    $upgrades = $this->GetUpgrades();
+    for($i=0; $i<count($upgrades); $i++) {
+      if($upgrades[$i] == $upgradeID) {
         return true;
       }
     }
