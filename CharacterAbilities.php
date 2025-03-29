@@ -122,19 +122,17 @@ function CharacterTakeDamageAbility($player, $index, $damage, $preventable)
   return $damage;
 }
 
-function CharacterStartRegroupPhaseAbilities($player) {
-  // To function correctly, use uniqueID instead of MZIndex
-  $character = &GetPlayerCharacter($player);
+function CharacterStartRegroupPhaseAbility($uniqueID, $player, $reportMode=false) {
+  $character = new Character($uniqueID, $player);
+  if (!$character->IsReady()) return false;
 
-  for ($i = 0; $i < count($character); $i += CharacterPieces()) {
-    if ($character[$i + 1] == 0 || $character[$i + 1] == 1) continue; //Do not process ability if it is destroyed
-    switch($character[$i]) {
-      case "0254929700"://Doctor Aphra
-        Mill($player, 1);
-        break;
-      default:
-        break;
-    }
+  switch($character->CardID()) {
+    case "0254929700"://Doctor Aphra
+      if ($reportMode) return true;
+      Mill($player, 1);
+      break;
+    default:
+      break;
   }
 }
 
