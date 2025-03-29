@@ -470,7 +470,7 @@ function GetMZCard($player, $MZIndex)
   if(str_starts_with($params[0], "THEIR")) $player = ($player == 1 ? 2 : 1);
   $zoneDS = &GetMZZone($player, $params[0]);
   $index = $params[1];
-  if($index == "") return "";
+  if($index == "" || !isset($zoneDS[$index])) return "";
   return $zoneDS[$index];
 }
 
