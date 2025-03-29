@@ -663,13 +663,14 @@ class Ally {
   }
 
   function GetSubcards() {
+    if(!$this->Exists() || !isset($this->allies[$this->index + 4]) || $this->allies[$this->index + 4] == "-") return [];
     $subcards = $this->allies[$this->index + 4];
     if($subcards == null || $subcards == "" || $subcards == "-") return [];
     return explode(",", $subcards);
   }
 
   function GetUpgrades($withMetadata = false) {
-    if(!$this->Exists() || $this->allies[$this->index + 4] == "-") return [];
+    if(!$this->Exists() || !isset($this->allies[$this->index + 4]) || $this->allies[$this->index + 4] == "-") return [];
     $subcards = $this->GetSubcards();
     $upgrades = [];
     for($i=0; $i<count($subcards); $i+=SubcardPieces()) {
@@ -711,7 +712,7 @@ class Ally {
   }
 
   function IsCloned() {
-    if (!$this->Exists()) return false;
+    if (!$this->Exists() || !isset($this->allies[$this->index + 13])) return false;
     return $this->allies[$this->index + 13] == 1;
   }
 
